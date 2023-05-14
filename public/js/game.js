@@ -99,7 +99,33 @@ window.addEventListener('load', function(){
     
   }
   class Enemy{
+    constructor(game){
+      this.game = game;
+      this.x = this.game.width; //start from right side of screen
+      this.speedX = Math.random() * 4 - 2.5; //moves right to the left
+      this.markedForDeletion = false;
+    }
+    update(){
+      this.x += this.speedX;
+      // enemy goes off screen, delete it
+      if (this.x + this.width < 0) this.markedForDeletion = true;
+    }
+    draw(context){
+      context.fillStyle = 'red'
+      context.fillRect(this.x, this.y, this.width, this.height);
+    }
 
+  }
+
+  class Angler1 extends Enemy{
+    constructor(game){
+      super(game);
+      // !make smaller enemies for now placeholders
+      this.width = 228 * 0.2;
+      this.height = 169 * 0.2;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+    
+    }
   }
   class BackgroundLayer{
 
@@ -132,11 +158,15 @@ window.addEventListener('load', function(){
       this.input = new Input(this);
       this.ui = new UI(this);
       this.keys = [];
+      this.enemies =[];
+      this.enemyTimer = 0;
+      this.enemyInterval = 1000;
       this.ammo = 25;
       this.maxAmmo =50
       this.ammoTimer = 0;
       // replenish one ammo every 500ms
-      this.ammoInterval = 500;
+      this.ammoInterval = 750;
+      this.gameOver = false;
     
     }
     update(frameTime){
@@ -147,11 +177,29 @@ window.addEventListener('load', function(){
       } else {
         this.ammoTimer += frameTime;
       }
+      this.enemies.forEach(enemy => {
+        enemy.update();
+      });
+      this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
+      if (this.enemyTimer > this.enemyInterval && !this.gameOver){
+        this.addEnemy();
+        this.enemyTimer = 0;
+      }else{
+        this.enemyTimer += frameTime;
+      }
     }
     draw(context){
       this.player.draw(context);
       this.ui.draw(context);
+      this.enemies.forEach(enemy => {
+        enemy.draw(context);
+      });
     }
+    addEnemy(){
+      this.enemies.push(new Angler1(this))
+      // console.log(this.enemies)
+    }
+    
 
   }
   // make the game and animate it on a continuous loop 
