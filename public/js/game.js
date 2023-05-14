@@ -15,6 +15,8 @@ window.addEventListener('load', function(){
               (event.key === 'ArrowDown') )
         && this.game.keys.indexOf(event.key) === -1){
           this.game.keys.push(event.key);
+        } else if (event.key === ' ') {
+          this.game.player.upperShot();
         }
         console.log(this.game.keys)
       });
@@ -29,7 +31,27 @@ window.addEventListener('load', function(){
 
   }
   class Fireball{
+    constructor(game, x, y) {
+      this.game = game;
+      this.x = x;
+      this.y = y;
+      this.width = 10;
+      this.height = 4;
+      this.speed = 4;
+      this.markedForDeletion = false;
 
+    }
+    update(){
+      this.x += this.speed
+      if (this.x > this.game.width * 0.9){
+        this.markedForDeletion = true;
+      }
+    }
+    draw(context){
+      context.fillStyle = 'white';
+      context.fillRect(this.x, this.y, this.width, this.height);
+
+    }
   }
   class Gear{
 
@@ -46,20 +68,35 @@ window.addEventListener('load', function(){
       // player starting speed
       this.speedY = 0;
       this.maxSpeed = 2.5;
+      this.fireballs = [];
     }
     update(){
-      if (this.game.keys.includes('ArrowUp')){
-        this.speedY = -1
-      } else if (this.game.keys.includes('ArrowDown')){
-        this.speedY = 1;
-      }
+      if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
+      else if (this.game.keys.includes('ArrowDown')) this.speedY = this.maxSpeed;
+      else this.speedY = 0; 
       this.y += this.speedY;
+      // // fireballs
+      this.fireballs.forEach(fireball => {
+        fireball.update();
+      });
+      this.fireballs = this.fireballs.filter(fireball => !fireball.markedForDeletion);
     }
     draw(context){
       // arguments: location and size measurements of player
+      context.fillStyle = 'blue';
       context.fillRect(this.x, this.y, this.width, this.height);
+      this.fireballs.forEach(fireball => {
+        fireball.draw(context);
+      });
     }
-
+    upperShot(){
+      if (this.game.ammo > 0) {
+        // !need to position the shot origin location
+        this.fireballs.push(new Fireball(this.game, this.x, this.y));
+        this.game.ammo--;
+      }
+    }
+    
   }
   class Enemy{
 
@@ -81,10 +118,22 @@ window.addEventListener('load', function(){
       this.player = new Player(this);
       this.input = new Input(this);
       this.keys = [];
+      this.ammo = 25;
+      this.maxAmmo =45
+      this.ammoTimer = 0;
+      // replenish one fireball every 500ms
+      this.ammoInterval = 500;
     
     }
-    update(){
+    update(changeTime){
       this.player.update();
+      if (this.ammoTimer > this.ammoInterval){
+        if (this.ammo < this.maxAmmo){
+          this.ammo++;
+        }else{
+          this.ammoTimer =+ changeTime;
+        }
+      }
     }
     draw(context){
       this.player.draw(context);
@@ -93,7 +142,13 @@ window.addEventListener('load', function(){
   }
   // make the game and animate it on a continuous loop 
   const game = new Game(canvas.width, canvas.height);
-  function animate(){
+  let lastTime = 0;
+  function animate(timeStamp){
+    // use built-in timestamps from requestAnimationFrame
+    // to find the change in time between animation loops
+    const changeTime = timeStamp - lastTime
+    // reset time for next changeTime calculation
+    lastTime= timeStamp
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     game.update();
     game.draw(ctx);
