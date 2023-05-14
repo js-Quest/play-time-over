@@ -75,7 +75,7 @@ window.addEventListener('load', function(){
       else if (this.game.keys.includes('ArrowDown')) this.speedY = this.maxSpeed;
       else this.speedY = 0; 
       this.y += this.speedY;
-      // // fireballs
+      // fireballs
       this.fireballs.forEach(fireball => {
         fireball.update();
       });
@@ -108,7 +108,20 @@ window.addEventListener('load', function(){
 
   }
   class UI{
-
+    constructor(game) {
+      this.game = game;
+      this.fontSize = 30;
+      this.fontFamily = 'Arial';
+      this.color = 'white';
+    }
+    draw(context){
+      // ammo bar
+      context.fillStyle = this.color;
+      for (let i = 0; i < this.game.ammo; i++) {
+        // left margin 20px, 5px spacing, i = ammo amount, 3px wide, 15px tall
+        context.fillRect(20 + 5*i + 5, 50, 3, 15);
+      }
+    }
   }
   class Game{
     // width and height of game matches size of canvas el
@@ -117,26 +130,27 @@ window.addEventListener('load', function(){
       this.height = height;
       this.player = new Player(this);
       this.input = new Input(this);
+      this.ui = new UI(this);
       this.keys = [];
       this.ammo = 25;
-      this.maxAmmo =45
+      this.maxAmmo =50
       this.ammoTimer = 0;
-      // replenish one fireball every 500ms
+      // replenish one ammo every 500ms
       this.ammoInterval = 500;
     
     }
-    update(changeTime){
+    update(frameTime){
       this.player.update();
-      if (this.ammoTimer > this.ammoInterval){
-        if (this.ammo < this.maxAmmo){
-          this.ammo++;
-        }else{
-          this.ammoTimer =+ changeTime;
-        }
+      if (this.ammoTimer > this.ammoInterval) {
+        if (this.ammo < this.maxAmmo) this.ammo++;
+        this.ammoTimer = 0;
+      } else {
+        this.ammoTimer += frameTime;
       }
     }
     draw(context){
       this.player.draw(context);
+      this.ui.draw(context);
     }
 
   }
@@ -146,14 +160,15 @@ window.addEventListener('load', function(){
   function animate(timeStamp){
     // use built-in timestamps from requestAnimationFrame
     // to find the change in time between animation loops
-    const changeTime = timeStamp - lastTime
-    // reset time for next changeTime calculation
-    lastTime= timeStamp
+    // my pc runs 60fps for this game (1000/16.6)
+    const frameTime = timeStamp - lastTime
+    // reset time for next frameTime calculation
+    lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.update();
+    game.update(frameTime);
     game.draw(ctx);
     // update animation before next refresh, loop.
     requestAnimationFrame(animate);
   }
-  animate();
+  animate(0);
 })
