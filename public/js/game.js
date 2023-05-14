@@ -9,8 +9,21 @@ window.addEventListener('load', function(){
   class Input{
     constructor(game){
       this.game = game;
-      window.addEventListener('keydown', function(event){
-        console.log(event.key);
+      // movement up and down of player on key events
+      window.addEventListener('keydown', event => {
+        if (( (event.key === 'ArrowUp')  ||
+              (event.key === 'ArrowDown') )
+        && this.game.keys.indexOf(event.key) === -1){
+          this.game.keys.push(event.key);
+        }
+        console.log(this.game.keys)
+      });
+      // one key in array at a time
+      window.addEventListener('keyup', event => {
+        if (this.game.keys.indexOf(event.key) > -1){
+          this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
+        }
+        console.log(this.game.keys)
       })
     }
 
@@ -32,8 +45,14 @@ window.addEventListener('load', function(){
       this.y = 100;
       // player starting speed
       this.speedY = 0;
+      this.maxSpeed = 2.5;
     }
     update(){
+      if (this.game.keys.includes('ArrowUp')){
+        this.speedY = -1
+      } else if (this.game.keys.includes('ArrowDown')){
+        this.speedY = 1;
+      }
       this.y += this.speedY;
     }
     draw(context){
@@ -61,6 +80,7 @@ window.addEventListener('load', function(){
       this.height = height;
       this.player = new Player(this);
       this.input = new Input(this);
+      this.keys = [];
     
     }
     update(){
