@@ -7,6 +7,12 @@ window.addEventListener('load', function(){
   // classes for encapsulation and inheritance.  
   // !REFACTOR CLASSES LATER
   class Input{
+    constructor(game){
+      this.game = game;
+      window.addEventListener('keydown', function(event){
+        console.log(event.key);
+      })
+    }
 
   }
   class Fireball{
@@ -28,7 +34,7 @@ window.addEventListener('load', function(){
       this.speedY = 0;
     }
     update(){
-
+      this.y += this.speedY;
     }
     draw(context){
       // arguments: location and size measurements of player
@@ -54,6 +60,7 @@ window.addEventListener('load', function(){
       this.width = width;
       this.height = height;
       this.player = new Player(this);
+      this.input = new Input(this);
     
     }
     update(){
@@ -67,6 +74,7 @@ window.addEventListener('load', function(){
   // make the game and animate it on a continuous loop 
   const game = new Game(canvas.width, canvas.height);
   function animate(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     game.update();
     game.draw(ctx);
     // update animation before next refresh, loop.
