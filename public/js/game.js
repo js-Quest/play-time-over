@@ -46,8 +46,8 @@ window.addEventListener('load', function(){
 
     }
     update(){
-      this.x += this.speed
-      if (this.x > this.game.width * 0.9){
+      this.x += this.speed //speed relative to position of origination
+      if (this.x > this.game.width * 0.9){ //delete if at 90% of canvas width
         this.markedForDeletion = true;
       }
     }
@@ -57,11 +57,38 @@ window.addEventListener('load', function(){
     }
   }
   class Gear{
+    // special effects for gears falling out of enemies
     constructor(game, x, y){
       this.game = game;
       this.x = x;
       this.y = y;
       this.image = document.getElementById('gears');
+      // grab random images from gears sprite sheet, 3x3 images (9 total)
+      this.frameX = Math.floor(Math.random() * 3);
+      this.frameY = Math.floor(Math.random() * 3);
+      this.spriteSize = 50; //sprite individual size on sheet
+      this.sizeModifier = (Math.random() * 0.5 + 0.5).toFixed(1); //random size mod
+      this.size = this.spriteSize * this.sizeModifier; //now all gears sized differently at random
+      this.speedX = Math.random() * 6 - 3; // random movement for gears
+      this.speedY = Math.random() * -15; //gears move up before going down
+      this.gravity = 0.5; //gears fall downward
+      this.markedForDeletion = false;
+      this.angle = 0; //each gear starts at a 0 angle
+      //then rotates -0.1 to +0.1 radians (velocity angle) per frame
+      this.vAngle = Math.random() * 0.2 - 0.1; 
+    }
+    update(){
+      this.angle += this.vAngle;
+      this.speedY += this.gravity;
+      this.x -= this.speedX + this.game.speed; //account for background scrolling on x-axis speed
+      this.y += this.speedY; //gives effect of falling down by gravity
+      if (this.y > this.game.height + this.size || this.x < 0 - this.size){
+       this.markedForDeletion = true; //delete when falls or scrolls off screen
+      } 
+    }
+    draw(context){
+      //9 arguments to get one frame of the sprite sheet: image, source x y w h, destination x y w h.  *0.5 so appear from center of image.
+      context.drawImage(this.image, this.frameX * this.spriteSize, this.frameY * this.spriteSize, this.spriteSize, this.spriteSize, this.size * -0.5, this.size * -0.5, this.size, this.size)
 
     }
   }
@@ -89,6 +116,9 @@ window.addEventListener('load', function(){
       else if (this.game.keys.includes('ArrowDown')) this.speedY = this.maxSpeed;
       else this.speedY = 0; 
       this.y += this.speedY;
+      // vertical boundary so player doesn't disappear off screen, only half off screen
+      if (this.y > this.game.height - this.height * 0.5) this.y = this.game.height - this.height * 0.5;
+      else if (this.y < -this.height * 0.5) this.y = -this.height * 0.5;
       // fireballs
       this.fireballs.forEach(fireball => {
         fireball.update();
@@ -262,7 +292,7 @@ window.addEventListener('load', function(){
     constructor(game) {
       this.game = game;
       this.fontSize = 30;
-      this.fontFamily = 'Arial';
+      this.fontFamily = 'Bangers';
       this.color = 'white';
     }
     draw(context){
@@ -292,11 +322,11 @@ window.addEventListener('load', function(){
           messageTop = 'Ya blew it!';
           messageBottom = 'Try again, looooserrrrr!';
         }
-        context.font = `50px ${this.fontFamily}`
+        context.font = `100px ${this.fontFamily}`
         // the message, x and y destination coordinates.  *0.5 centers it.
         context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
-        context.font = `25px ${this.fontFamily}`
-        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 30) 
+        context.font = `50px ${this.fontFamily}`
+        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50) 
       }
       // ammo bar
       if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
@@ -319,6 +349,7 @@ window.addEventListener('load', function(){
       this.background = new Background(this);
       this.keys = [];
       this.enemies =[];
+      this.gears = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
       this.ammo = 25;
@@ -343,26 +374,35 @@ window.addEventListener('load', function(){
       this.background.layer4.update(); //update layer4 after player renders so player doesn't overlap
       this.player.update(frameTime);
       if (this.ammoTimer > this.ammoInterval) {
-        if (this.ammo < this.maxAmmo) this.ammo++;
-        this.ammoTimer = 0;
+        if (this.ammo < this.maxAmmo) this.ammo++; //ammo recharge on a timer
+        this.ammoTimer = 0; //restart timer
       } else {
         this.ammoTimer += frameTime;
       }
+      this.gears.forEach(gear => gear.update());
+      this.gears = this.gears.filter(gear => !gear.markedForDeletion);
       this.enemies.forEach(enemy => {
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
+          for (let i = 0; i < enemy.score; i++) { // # of gears falling depend on strength of enemy
+            this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
+          }
           if (enemy.type === 'lucky'){
-            this.player.enterPowerUp();
+            this.player.enterPowerUp(); //powerup if collide with lucky type
           }else{
-            this.score--;
+            this.score--; //lose a point for collision with non-lucky enemies
           }
         }
         this.player.fireballs.forEach(fireball => {
           if (this.checkCollision(fireball, enemy)) {
-            enemy.lives--;
-            fireball.markedForDeletion = true;
+            enemy.lives--; // enemy lose 1 life point every time hit by fireball
+            fireball.markedForDeletion = true; //delete fireball after collision
+            this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite 
             if (enemy.lives <= 0){
+              for (let i = 0; i < enemy.score; i++) { // # of gears falling depend on strength of enemy
+                this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
+              }
               enemy.markedForDeletion = true;
               this.score += enemy.score;
               if (!this.gameOver){
@@ -383,10 +423,11 @@ window.addEventListener('load', function(){
         this.enemyTimer += frameTime;
       }
     }
-    draw(context){
+    draw(context){ //stuff gets drawn in order top to bottom
       this.background.draw(context);
       this.player.draw(context);
       this.ui.draw(context);
+      this.gears.forEach(gear => gear.draw(context));
       this.enemies.forEach(enemy => {
         enemy.draw(context);
       });
