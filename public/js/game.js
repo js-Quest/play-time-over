@@ -1,12 +1,8 @@
-var audio = document.createElement("AUDIO")
-document.body.appendChild(audio);
-audio.src = "public/assets/audio/theme-songs/level1.mp3"
-audio.volume = 0.75;
 
-document.body.addEventListener("click", function () {
-  audio.play()
-});
-
+const themeMusic = document.getElementById("level1");
+window.addEventListener('click', function(){
+  themeMusic.pause()  //pause theme music by clicking on the window
+})
 
 window.addEventListener('load', function(){
   const canvas = document.getElementById('game-canvas');
@@ -20,6 +16,7 @@ window.addEventListener('load', function(){
       this.game = game;
       // movement up and down of player on key events
       window.addEventListener('keydown', event => {
+        themeMusic.play(); //theme music plays on any keydown event
         if (( (event.key === 'ArrowUp')  ||
               (event.key === 'ArrowDown') )
         && this.game.keys.indexOf(event.key) === -1){
