@@ -99,7 +99,38 @@ window.addEventListener('load', function(){
     
   }
   class Enemy{
+    constructor(game){
+      this.game = game;
+      this.x = this.game.width; //start from right side of screen
+      this.speedX = Math.random() * 4 - 2.5; //moves right to the left
+      this.markedForDeletion = false;
+      this.lives= 5;
+      this.score = this.lives;
+    }
+    update(){
+      this.x += this.speedX;
+      // enemy goes off screen, delete it
+      if (this.x + this.width < 0) this.markedForDeletion = true;
+    }
+    draw(context){
+      context.fillStyle = 'red'
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.fillStyle = 'black';
+      context.font = '20px Arial';
+      context.fillText(this.lives, this.x, this.y);
+    }
 
+  }
+
+  class Angler1 extends Enemy{
+    constructor(game){
+      super(game);
+      // !make smaller enemies for now placeholders
+      this.width = 228 * 0.2;
+      this.height = 169 * 0.2;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+    
+    }
   }
   class BackgroundLayer{
 
@@ -115,12 +146,46 @@ window.addEventListener('load', function(){
       this.color = 'white';
     }
     draw(context){
+      context.save(); //save and restore states of canvas
+      // score
+      context.fillStyle = this.color;
+      context.shadowOffsetX=2;
+      context.shadowOffsetY=2;
+      context.shadowColor='black';
+      
+      context.font = `${this.fontSize}px ${this.fontFamily}`
+      context.fillText(`Score: ${this.game.score}`, 20, 40)
       // ammo bar
       context.fillStyle = this.color;
       for (let i = 0; i < this.game.ammo; i++) {
         // left margin 20px, 5px spacing, i = ammo amount, 3px wide, 15px tall
         context.fillRect(20 + 5*i + 5, 50, 3, 15);
       }
+      // game timer
+      const formatTime = (this.game.gameTime * 0.001).toFixed(1);
+      context.fillText(`Timer: ${formatTime}`, 20 ,100)
+
+      // game over
+      if (this.game.gameOver){
+        context.textAlign='center';
+        let messageTop;
+        let messageBottom;
+        if(this.game.score > this.game.winningScore){
+          messageTop = 'You did it.'
+          messageBottom = 'You beat an easy game.'
+        }else{
+          messageTop = 'Ya blew it!';
+          messageBottom = 'Try again, looooserrrrr!';
+        }
+        context.font = `50px ${this.fontFamily}`
+        // the message, x and y destination coordinates.  *0.5 centers it.
+        context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
+        context.font = `25px ${this.fontFamily}`
+        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 30)
+        
+        
+      }
+      context.restore();
     }
   }
   class Game{
@@ -132,14 +197,28 @@ window.addEventListener('load', function(){
       this.input = new Input(this);
       this.ui = new UI(this);
       this.keys = [];
+      this.enemies =[];
+      this.enemyTimer = 0;
+      this.enemyInterval = 1000;
       this.ammo = 25;
       this.maxAmmo =50
       this.ammoTimer = 0;
       // replenish one ammo every 500ms
-      this.ammoInterval = 500;
+      this.ammoInterval = 750;
+      this.gameOver = false;
+      this.score = 0;
+      this.winningScore = 10;
+      this.gameTime = 0;
+      this.timeLimit = 20000;
     
     }
     update(frameTime){
+      if (!this.gameOver){
+        this.gameTime += frameTime;
+      }
+      if (this.gameTime > this.timeLimit){
+        this.gameOver = true;
+      }
       this.player.update();
       if (this.ammoTimer > this.ammoInterval) {
         if (this.ammo < this.maxAmmo) this.ammo++;
@@ -147,11 +226,58 @@ window.addEventListener('load', function(){
       } else {
         this.ammoTimer += frameTime;
       }
+      this.enemies.forEach(enemy => {
+        enemy.update();
+        if (this.checkCollision(this.player, enemy)){
+          enemy.markedForDeletion = true;
+        }
+        this.player.fireballs.forEach(fireball => {
+          if (this.checkCollision(fireball, enemy)) {
+            enemy.lives--;
+            fireball.markedForDeletion = true;
+            if (enemy.lives <= 0){
+              enemy.markedForDeletion = true;
+              this.score += enemy.score;
+              if (!this.gameOver){
+                this.score += enemy.score;
+              }
+              if (this.score > this.winningScore){
+                this.gameOver = true;
+              }
+            }
+          }
+        })
+      });
+      this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
+      if (this.enemyTimer > this.enemyInterval && !this.gameOver){
+        this.addEnemy();
+        this.enemyTimer = 0;
+      }else{
+        this.enemyTimer += frameTime;
+      }
     }
     draw(context){
       this.player.draw(context);
       this.ui.draw(context);
+      this.enemies.forEach(enemy => {
+        enemy.draw(context);
+      });
     }
+    addEnemy(){
+      this.enemies.push(new Angler1(this))
+      // console.log(this.enemies)
+    }
+
+  // check collision of rectangles(sprite animation hit boxes)
+    checkCollision(rect1,rect2){
+      // is rect1Xposition less than rect2X plus its width
+      return (rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.height + rect1.y > rect2.y
+      )
+    }
+
 
   }
   // make the game and animate it on a continuous loop 

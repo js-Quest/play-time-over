@@ -10,3 +10,26 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+#layer1,
+#layer2,
+#layer3,
+#layer4,
+#player,
+#angler1,
+#angler2,
+#lucky,
+#projectile,
+#gears,
+#hivewhale,
+#drone,
+#smokeExplosion,
+#fireExplosion,
+#bulbwhale,
+#moonfish,
+#shield,
+#fireball,
+#stalker,
+#razorfin {
+  display: none;
+}
