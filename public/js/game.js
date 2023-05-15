@@ -132,11 +132,50 @@ window.addEventListener('load', function(){
     
     }
   }
-  class BackgroundLayer{
+  class BackgroundLayer{  //handle logic for layers
+    constructor(game, image, speedModifier){
+      this.game = game;
+      this.image = image;
+      this.speedModifier = speedModifier;
+      this.width = 1767;
+      this.height = 500;
+      this.x = 0;
+      this.y = 0;
+    }
+    update() {
+      // scrolling layers and reset to scroll again
+      if (this.x <= -this.width){
+        this.x = 0;
+      }
+      this.x -= this.game.speed * this.speedModifier;
+    }
+    draw(context) {
+      // arguments: image and destination
+      context.drawImage(this.image, this.x, this.y)
+      // parallax background, seamless scrolling
+      context.drawImage(this.image, this.x + this.width, this.y)
+    }
 
   }
-  class Background{
-
+  class Background{ //handle layers 
+    constructor(game){
+      this.game = game;
+      this.image1 = document.getElementById('layer1');
+      this.image2 = document.getElementById('layer2');
+      this.image3 = document.getElementById('layer3');
+      this.image4 = document.getElementById('layer4');
+      this.layer1 = new BackgroundLayer(this.game, this.image1, 0.2);
+      this.layer2 = new BackgroundLayer(this.game, this.image2, 0.4);
+      this.layer3 = new BackgroundLayer(this.game, this.image3, 1);
+      this.layer4 = new BackgroundLayer(this.game, this.image4, 1.5);
+      this.layers = [this.layer1, this.layer2, this.layer3]
+    }
+    update(){
+      this.layers.forEach(layer => layer.update());
+    }
+    draw(context){
+      this.layers.forEach(layer => layer.draw(context));
+    }
   }
   class UI{
     constructor(game) {
@@ -196,6 +235,7 @@ window.addEventListener('load', function(){
       this.player = new Player(this);
       this.input = new Input(this);
       this.ui = new UI(this);
+      this.background = new Background(this);
       this.keys = [];
       this.enemies =[];
       this.enemyTimer = 0;
@@ -210,15 +250,15 @@ window.addEventListener('load', function(){
       this.winningScore = 10;
       this.gameTime = 0;
       this.timeLimit = 20000;
+      // backgroundLayer scroll speed
+      this.speed = 1;
     
     }
     update(frameTime){
-      if (!this.gameOver){
-        this.gameTime += frameTime;
-      }
-      if (this.gameTime > this.timeLimit){
-        this.gameOver = true;
-      }
+      if (!this.gameOver){this.gameTime += frameTime;}
+      if (this.gameTime > this.timeLimit){this.gameOver = true;}
+      this.background.update();
+      this.background.layer4.update(); //update layer4 after player renders so player doesn't overlap
       this.player.update();
       if (this.ammoTimer > this.ammoInterval) {
         if (this.ammo < this.maxAmmo) this.ammo++;
@@ -257,11 +297,13 @@ window.addEventListener('load', function(){
       }
     }
     draw(context){
+      this.background.draw(context);
       this.player.draw(context);
       this.ui.draw(context);
       this.enemies.forEach(enemy => {
         enemy.draw(context);
       });
+      this.background.layer4.draw(context); //will appear in front of all other game objects
     }
     addEnemy(){
       this.enemies.push(new Angler1(this))
