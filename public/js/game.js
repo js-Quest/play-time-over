@@ -328,6 +328,53 @@ window.addEventListener('load', function(){
       this.layers.forEach(layer => layer.draw(context));
     }
   }
+  class Explosion {
+    constructor(game, x, y) {
+      this.game = game;
+      this.frameX = 0;
+      this.spriteHeight = 200;
+      this.fps = 25;
+      this.timer = 0;
+      this.interval = 1000 / this.fps;
+      this.markedForDeletion = false;
+      this.maxFrame = 8;
+    }
+    update(frameTime){
+      this.x -= this.game.speed;
+      if (this.timer > this.interval){
+        this.frameX++;
+      }else{
+        this.timer += frameTime;
+      }
+      if (this.frameX > this.maxFrame){
+        this.markedForDeletion = true;
+      }
+    }
+    draw(context){
+      context.drawImage(this.image, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+    }
+  }
+  class SmokeExplosion extends Explosion {
+    constructor(game, x, y){
+      super(game, x, y);
+      this.image = document.getElementById('smokeExplosion');
+      this.width = this.spriteWidth;
+      this.height = this.spriteHeight;
+      this.x = x - this.width * 0.5;
+      this.y = y - this.height * 0.5;
+    }
+
+  }
+  class FireExplosion extends Explosion {
+    constructor(game, x, y) {
+      super(game, x, y);
+      this.image = document.getElementById(fireExplosion');
+      this.width = this.spriteWidth;
+      this.height = this.spriteHeight;
+      this.x = x - this.width * 0.5;
+      this.y = y - this.height * 0.5;
+    }
+  }
   class UI{
     constructor(game) {
       this.game = game;
@@ -388,7 +435,8 @@ window.addEventListener('load', function(){
       this.ui = new UI(this);
       this.background = new Background(this);
       this.keys = [];
-      this.enemies =[];
+      this.enemies = [];
+      this.explosions = [];
       this.gears = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
@@ -421,10 +469,14 @@ window.addEventListener('load', function(){
       }
       this.gears.forEach(gear => gear.update());
       this.gears = this.gears.filter(gear => !gear.markedForDeletion);
+      this.explosions.forEach(explosion => explosion.update(frameTime));
+      this.explosions = this.explosions.filter(explosion => !explosion.markedForDeletion);
       this.enemies.forEach(enemy => {
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
+          this.addExplosion(enemy);
+          // this.addExplosion(enemy);
           for (let i = 0; i < enemy.score; i++) { // # of gears falling depend on strength of enemy
             this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
           }
@@ -445,6 +497,7 @@ window.addEventListener('load', function(){
                 this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
               }
               enemy.markedForDeletion = true;
+              this.addExplosion(enemy);
               this.score += enemy.score;
               if (enemy.type === 'hive'){
                 for (let i = 0; i <5; i++){
@@ -478,6 +531,9 @@ window.addEventListener('load', function(){
       this.enemies.forEach(enemy => {
         enemy.draw(context);
       });
+      this.explosions.forEach(explosion => {
+        explosion.draw(context);
+      });
       this.background.layer4.draw(context); //will appear in front of all other game objects
     }
     addEnemy(){
@@ -486,7 +542,13 @@ window.addEventListener('load', function(){
       else if (randomize < 0.5) this.enemies.push(new Angler2(this));
       else if (randomize < 0.7) this.enemies.push(new HiveWhale(this));
       else {this.enemies.push(new Lucky(this))};
-      // console.log(this.enemies)
+    }
+    addExplosion(enemy){
+      const randomize = Math.random();
+      if (randomize < 1){
+        this.explosions.push(new SmokeExplosion(this, enemy.x + enemy.width, enemy.y + enemy.height))
+      }
+      
     }
 
   // check collision of rectangles(sprite animation hit boxes)
@@ -512,9 +574,9 @@ window.addEventListener('load', function(){
     // reset time for next frameTime calculation
     lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.update(frameTime);
     game.draw(ctx);
     // update animation before next refresh, loop.
+    game.update(frameTime);
     requestAnimationFrame(animate);
   }
   animate(0);
