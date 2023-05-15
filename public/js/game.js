@@ -20,14 +20,14 @@ window.addEventListener('load', function(){
         } else if (event.key === 'd'){ //toggle git boxes on and off
           this.game.bug = !this.game.bug;
         }
-        console.log(this.game.keys)
+        // console.log(this.game.keys)
       });
       // one key in array at a time
       window.addEventListener('keyup', event => {
         if (this.game.keys.indexOf(event.key) > -1){
           this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
         }
-        console.log(this.game.keys)
+        // console.log(this.game.keys)
       })
     }
 
@@ -69,13 +69,14 @@ window.addEventListener('load', function(){
       this.spriteSize = 50; //sprite individual size on sheet
       this.sizeModifier = (Math.random() * 0.5 + 0.5).toFixed(1); //random size mod
       this.size = this.spriteSize * this.sizeModifier; //now all gears sized differently at random
-      this.speedX = Math.random() * 6 - 3; // random movement for gears
+      this.speedX = Math.random() * 6 - 3; // random movement for gears, -3 to +3
       this.speedY = Math.random() * -15; //gears move up before going down
       this.gravity = 0.5; //gears fall downward
       this.markedForDeletion = false;
       this.angle = 0; //each gear starts at a 0 angle
-      //then rotates -0.1 to +0.1 radians (velocity angle) per frame
-      this.vAngle = Math.random() * 0.2 - 0.1; 
+      this.vAngle = Math.random() * 0.2 - 0.1; //then rotates -0.1 to +0.1 radians (velocity angle) per frame
+      this.bounced = false;
+      this.bottomBoundary = Math.random() * 80 + 60; // sets to between 60-140px for 3D-ish effect
     }
     update(){
       this.angle += this.vAngle;
@@ -85,11 +86,18 @@ window.addEventListener('load', function(){
       if (this.y > this.game.height + this.size || this.x < 0 - this.size){
        this.markedForDeletion = true; //delete when falls or scrolls off screen
       } 
+      if (this.y > this.game.height - this.bottomBoundary && !this.bounced){
+       this.bounced = true;
+       this.speedY *= -0.5; //moves it upward after hitting boundary so 'bounces'
+      }
     }
     draw(context){
-      //9 arguments to get one frame of the sprite sheet: image, source x y w h, destination x y w h.  *0.5 so appear from center of image.
-      context.drawImage(this.image, this.frameX * this.spriteSize, this.frameY * this.spriteSize, this.spriteSize, this.spriteSize, this.size * -0.5, this.size * -0.5, this.size, this.size)
-
+      context.save() //anything between save/restore only affects code in between bc you call restore later.  
+      context.translate(this.x, this.y); //need to specify where we want the rotating effect.
+      context.rotate(this.angle)
+      //9 args get one frame of the sprite sheet: image, source x y w h, destination x y w h.  
+      context.drawImage(this.image, this.frameX * this.spriteSize, this.frameY * this.spriteSize, this.spriteSize, this.spriteSize, this.size * -0.5, this.size * -0.5, this.size, this.size); //destinations x and y are already specified in the context.translate; * -0.5 is to move the origination of the effect to the center of the enemy animation, otherwise it originates from the top left corner because that's canvas default.
+      context.restore()
     }
   }
   class Player{
@@ -168,16 +176,19 @@ window.addEventListener('load', function(){
         this.game.ammo--;
       }
     }
-    enterPowerUp(){
+    goPowerUp(){
       this.powerUpTimer = 0; // you can reset timer by getting more powerups
       this.powerUp = true;
-      this.game.ammo = this.game.maxAmmo;
+      if (this.game.ammo < this.game.maxAmmo){
+        this.game.ammo = this.game.maxAmmo;
+      };
     }   
   }
   class Enemy{
     constructor(game){
       this.game = game;
       this.x = this.game.width; //start from right side of screen
+      this.y = 0;
       this.speedX = Math.random() * 4 - 2.5; //moves right to the left
       this.markedForDeletion = false;
       this.frameX = 0;
@@ -211,7 +222,7 @@ window.addEventListener('load', function(){
       super(game);
       this.width = 228;
       this.height = 169;
-      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);//random spawn 95% screen height
       this.image = document.getElementById('angler1');
       this.frameY = Math.floor(Math.random() * 3); //three animations that loop on sheet, random pick one
       this.lives = 3;
@@ -223,7 +234,7 @@ window.addEventListener('load', function(){
       super(game);
       this.width = 213;
       this.height = 165;
-      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      
       this.image = document.getElementById('angler2');
       this.frameY = Math.floor(Math.random() * 2); //two animations that loop on sheet, random pick one
       this.lives = 4;
@@ -241,6 +252,35 @@ window.addEventListener('load', function(){
       this.lives = 3;
       this.score = 7;
       this.type = 'lucky';
+    }
+  }
+  class HiveWhale extends Enemy {
+    constructor(game) {
+      super(game);
+      this.width = 400;
+      this.height = 227;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      this.image = document.getElementById('hivewhale');
+      this.frameY = 0; // 0 bc only one row on the sprite sheet
+      this.lives = 14;
+      this.score = this.lives;
+      this.type = 'hive';
+      this.speedX = Math.random() * -1.3 - 0.4; //moves slow
+    }
+  }
+  class Drone extends Enemy {
+    constructor(game, x, y) { //only seen when hivewhale destroyed
+      super(game);
+      this.width = 115;
+      this.height = 95;
+      this.x = x;
+      this.y = y;
+      this.image = document.getElementById('drone');
+      this.frameY = Math.floor(Math.random() * 2); //row 0 or row 1
+      this.lives = 2;
+      this.score = this.lives;
+      this.type = 'drone';
+      this.speedX = Math.random() * -4.2 - 0.5 //can move faster, 0.5-4.7px per frame
     }
   }
   class BackgroundLayer{  //handle logic for layers
@@ -263,7 +303,7 @@ window.addEventListener('load', function(){
     draw(context) {
       // arguments: image and destination
       context.drawImage(this.image, this.x, this.y)
-      // parallax background, seamless scrolling
+     // parallax background, seamless scrolling 
       context.drawImage(this.image, this.x + this.width, this.y)
     }
 
@@ -364,7 +404,7 @@ window.addEventListener('load', function(){
       this.timeLimit = 20000;
       // backgroundLayer scroll speed
       this.speed = 1;
-      this.bug = true;
+      this.bug = false;
     
     }
     update(frameTime){
@@ -389,22 +429,28 @@ window.addEventListener('load', function(){
             this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
           }
           if (enemy.type === 'lucky'){
-            this.player.enterPowerUp(); //powerup if collide with lucky type
+            this.player.goPowerUp(); //powerup if collide with lucky type
           }else{
             this.score--; //lose a point for collision with non-lucky enemies
           }
         }
         this.player.fireballs.forEach(fireball => {
           if (this.checkCollision(fireball, enemy)) {
-            enemy.lives--; // enemy lose 1 life point every time hit by fireball
+            enemy.lives--; // enemy loses 1 life point every time hit by fireball
             fireball.markedForDeletion = true; //delete fireball after collision
             this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite 
             if (enemy.lives <= 0){
-              for (let i = 0; i < enemy.score; i++) { // # of gears falling depend on strength of enemy
-                this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
+              // # of gears falling depend on strength of enemy
+              for (let i = 0; i < enemy.score; i++) {
+                this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
               }
               enemy.markedForDeletion = true;
               this.score += enemy.score;
+              if (enemy.type === 'hive'){
+                for (let i = 0; i <5; i++){
+                  this.enemies.push(new Drone(this, enemy.x + Math.random() * enemy.width, enemy.y + Math.random() * enemy.height * 0.5)); //random spawn within whale coords
+                }
+              }
               if (!this.gameOver){
                 this.score += enemy.score;
               }
@@ -425,9 +471,10 @@ window.addEventListener('load', function(){
     }
     draw(context){ //stuff gets drawn in order top to bottom
       this.background.draw(context);
-      this.player.draw(context);
       this.ui.draw(context);
+      this.player.draw(context);
       this.gears.forEach(gear => gear.draw(context));
+      // console.log(this.gears)
       this.enemies.forEach(enemy => {
         enemy.draw(context);
       });
@@ -436,9 +483,10 @@ window.addEventListener('load', function(){
     addEnemy(){
       const randomize = Math.random();
       if (randomize < 0.3) this.enemies.push(new Angler1(this))
-      else if (randomize < 0.6) this.enemies.push(new Angler2(this));
+      else if (randomize < 0.5) this.enemies.push(new Angler2(this));
+      else if (randomize < 0.7) this.enemies.push(new HiveWhale(this));
       else {this.enemies.push(new Lucky(this))};
-      console.log(this.enemies)
+      // console.log(this.enemies)
     }
 
   // check collision of rectangles(sprite animation hit boxes)
