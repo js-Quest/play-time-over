@@ -17,7 +17,7 @@ window.addEventListener('load', function(){
           this.game.keys.push(event.key);
         } else if (event.key === ' ') {
           this.game.player.upperShot();
-        } else if (event.key === 'd'){
+        } else if (event.key === 'd'){ //toggle git boxes on and off
           this.game.bug = !this.game.bug;
         }
         console.log(this.game.keys)
@@ -38,9 +38,11 @@ window.addEventListener('load', function(){
       this.x = x;
       this.y = y;
       this.width = 10;
-      this.height = 4;
-      this.speed = 4;
+      this.height = 3;
+      this.speed = 3;
       this.markedForDeletion = false;
+      this.image = document.getElementById('fireball');
+
 
     }
     update(){
@@ -50,13 +52,18 @@ window.addEventListener('load', function(){
       }
     }
     draw(context){
-      context.fillStyle = 'white';
-      context.fillRect(this.x, this.y, this.width, this.height);
+      context.drawImage(this.image, this.x, this.y);
 
     }
   }
   class Gear{
+    constructor(game, x, y){
+      this.game = game;
+      this.x = x;
+      this.y = y;
+      this.image = document.getElementById('gears');
 
+    }
   }
   class Player{
     // game as argument to give access to properties of Game class
@@ -73,8 +80,11 @@ window.addEventListener('load', function(){
       this.maxSpeed = 2.5;
       this.fireballs = [];
       this.image = document.getElementById('player');
+      this.powerUp = false;
+      this.powerUpTimer = 0;
+      this.powerUpLimit = 10000;
     }
-    update(){
+    update(frameTime){
       if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
       else if (this.game.keys.includes('ArrowDown')) this.speedY = this.maxSpeed;
       else this.speedY = 0; 
@@ -90,25 +100,49 @@ window.addEventListener('load', function(){
       } else {
         this.frameX = 0;
       }
+      // powerup fishes!
+      if (this.powerUp) {
+        if (this.powerUpTimer > this.powerUpLimit) {
+          this.powerUpTimer = 0;
+          this.powerUp = false;
+          this.frameY = 0;
+        } else {
+          this.powerUpTimer += frameTime;
+          this.frameY = 1; //the second row of the player sprite sheet
+          this.game.ammo += 0.1; //bonus ammo replenishment
+        }
+      }
     }
     draw(context){
       // arguments: location and size measurements of player
       context.fillStyle = 'black';
       if (this.game.bug) {context.strokeRect(this.x, this.y, this.width, this.height)};
-      //9 arguments: this image, source x, source y, source width, source height, destinations(this) x y w h to specify where we want the cropped image on the canvas
-      context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
       this.fireballs.forEach(fireball => {
         fireball.draw(context);
       });
+      //9 arguments: this image, source x, source y, source width, source height, destinations(this) x y w h to specify where we want the cropped image on the canvas
+      context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
     }
     upperShot(){
       if (this.game.ammo > 0) {
         // !need to position the shot origin location
-        this.fireballs.push(new Fireball(this.game, this.x, this.y));
+        this.fireballs.push(new Fireball(this.game, this.x +80, this.y +30));
+        this.game.ammo--;
+      }
+      if(this.powerUp){ this.lowerShot()};
+    }
+    lowerShot(){
+      if (this.game.ammo > 0) {
+        // !need to position the shot origin location
+        this.fireballs.push(new Fireball(this.game, this.x +85, this.y +100));
         this.game.ammo--;
       }
     }
-    
+    enterPowerUp(){
+      this.powerUpTimer = 0; // you can reset timer by getting more powerups
+      this.powerUp = true;
+      this.game.ammo = this.game.maxAmmo;
+    }   
   }
   class Enemy{
     constructor(game){
@@ -116,20 +150,28 @@ window.addEventListener('load', function(){
       this.x = this.game.width; //start from right side of screen
       this.speedX = Math.random() * 4 - 2.5; //moves right to the left
       this.markedForDeletion = false;
-      this.lives= 5;
-      this.score = this.lives;
+      this.frameX = 0;
+      this.frameY = 0;
+      this.maxFrame = 37;
     }
     update(){
-      this.x += this.speedX;
-      // enemy goes off screen, delete it
+      // account for scrolling speed of background for enemy speed consideration
+      this.x += this.speedX - this.game.speed;
       if (this.x + this.width < 0) this.markedForDeletion = true;
+      // sprite animation
+      if (this.frameX < this.maxFrame) {
+        this.frameX++;
+      } else this.frameX = 0;
     }
     draw(context){
-      context.fillStyle = 'red'
-      context.fillRect(this.x, this.y, this.width, this.height);
-      context.fillStyle = 'black';
-      context.font = '20px Arial';
-      context.fillText(this.lives, this.x, this.y);
+      // context.fillStyle = 'red'
+      if (this.game.bug) {context.strokeRect(this.x, this.y, this.width, this.height)};
+      context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
+      if (this.game.bug){
+        context.strokeStyle = 'black';
+        context.font = '25px Arial';
+        context.strokeText(this.lives, this.x, this.y);
+      }
     }
 
   }
@@ -137,11 +179,38 @@ window.addEventListener('load', function(){
   class Angler1 extends Enemy{
     constructor(game){
       super(game);
-      // !make smaller enemies for now placeholders
-      this.width = 228 * 0.2;
-      this.height = 169 * 0.2;
+      this.width = 228;
+      this.height = 169;
       this.y = Math.random() * (this.game.height * 0.95 - this.height);
-    
+      this.image = document.getElementById('angler1');
+      this.frameY = Math.floor(Math.random() * 3); //three animations that loop on sheet, random pick one
+      this.lives = 3;
+      this.score = this.lives;
+    }
+  }
+  class Angler2 extends Enemy{
+    constructor(game){
+      super(game);
+      this.width = 213;
+      this.height = 165;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      this.image = document.getElementById('angler2');
+      this.frameY = Math.floor(Math.random() * 2); //two animations that loop on sheet, random pick one
+      this.lives = 4;
+      this.score = this.lives;
+    }
+  }
+  class Lucky extends Enemy {
+    constructor(game) {
+      super(game);
+      this.width = 99;
+      this.height = 95;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      this.image = document.getElementById('lucky');
+      this.frameY = Math.floor(Math.random() * 2); //two animations that loop on sheet, random pick one
+      this.lives = 3;
+      this.score = 7;
+      this.type = 'lucky';
     }
   }
   class BackgroundLayer{  //handle logic for layers
@@ -206,12 +275,7 @@ window.addEventListener('load', function(){
       
       context.font = `${this.fontSize}px ${this.fontFamily}`
       context.fillText(`Score: ${this.game.score}`, 20, 40)
-      // ammo bar
-      context.fillStyle = this.color;
-      for (let i = 0; i < this.game.ammo; i++) {
-        // left margin 20px, 5px spacing, i = ammo amount, 3px wide, 15px tall
-        context.fillRect(20 + 5*i + 5, 50, 3, 15);
-      }
+      
       // game timer
       const formatTime = (this.game.gameTime * 0.001).toFixed(1);
       context.fillText(`Timer: ${formatTime}`, 20 ,100)
@@ -232,9 +296,14 @@ window.addEventListener('load', function(){
         // the message, x and y destination coordinates.  *0.5 centers it.
         context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
         context.font = `25px ${this.fontFamily}`
-        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 30)
-        
-        
+        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 30) 
+      }
+      // ammo bar
+      if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
+      context.fillStyle = this.color;
+      for (let i = 0; i < this.game.ammo; i++) {
+        // left margin 20px, 5px spacing, i = ammo amount, 3px wide, 15px tall
+        context.fillRect(20 + 5 * i + 5, 50, 3, 15);
       }
       context.restore();
     }
@@ -272,7 +341,7 @@ window.addEventListener('load', function(){
       if (this.gameTime > this.timeLimit){this.gameOver = true;}
       this.background.update();
       this.background.layer4.update(); //update layer4 after player renders so player doesn't overlap
-      this.player.update();
+      this.player.update(frameTime);
       if (this.ammoTimer > this.ammoInterval) {
         if (this.ammo < this.maxAmmo) this.ammo++;
         this.ammoTimer = 0;
@@ -283,6 +352,11 @@ window.addEventListener('load', function(){
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
+          if (enemy.type === 'lucky'){
+            this.player.enterPowerUp();
+          }else{
+            this.score--;
+          }
         }
         this.player.fireballs.forEach(fireball => {
           if (this.checkCollision(fireball, enemy)) {
@@ -319,8 +393,11 @@ window.addEventListener('load', function(){
       this.background.layer4.draw(context); //will appear in front of all other game objects
     }
     addEnemy(){
-      this.enemies.push(new Angler1(this))
-      // console.log(this.enemies)
+      const randomize = Math.random();
+      if (randomize < 0.3) this.enemies.push(new Angler1(this))
+      else if (randomize < 0.6) this.enemies.push(new Angler2(this));
+      else {this.enemies.push(new Lucky(this))};
+      console.log(this.enemies)
     }
 
   // check collision of rectangles(sprite animation hit boxes)
