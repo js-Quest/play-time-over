@@ -1,0 +1,39 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/jass.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>TEST VIEW</title>
+  </head>
+  <body>
+
+    <header class="display-flex justify-center p-2 bg-dark">
+      <h1>
+        <a href="/">PLAY-TIME-OVER</a>
+      </h1>
+    </header>
+    <div class="text-right">
+      <nav>
+        <a href="/">Home </a>
+        {{#if logged_in}}
+          <a class="no-button" id="logout">logout</a>
+        {{else}}
+          <a href="/login">login</a>
+        {{/if}}
+      </nav>
+    </div>
+
+    {{{body}}}
+
+    {{#if logged_in}}
+      <script src="/js/logout.js"></script>
+    {{/if}}
+
+  </body>
+</html>
