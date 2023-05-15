@@ -17,17 +17,16 @@
       <h1>
         <a href="/">PLAY-TIME-OVER</a>
       </h1>
+      <div>
+        <div class="text-right">
+          <nav>
+            {{#if logged_in}}
+              <a class="no-button" id="logout">logout</a>
+            {{/if}}
+          </nav>
+        </div>
+      </div>
     </header>
-    <div class="text-right">
-      <nav>
-        <a href="/">Home </a>
-        {{#if logged_in}}
-          <a class="no-button" id="logout">logout</a>
-        {{else}}
-          <a href="/login">login</a>
-        {{/if}}
-      </nav>
-    </div>
 
     {{{body}}}
 
