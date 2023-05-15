@@ -2,7 +2,7 @@
 window.addEventListener('load', function(){
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = 750;
+  canvas.width = 800;
   canvas.height = 500;
   // classes for encapsulation and inheritance.  
   // !REFACTOR CLASSES LATER
@@ -225,7 +225,7 @@ window.addEventListener('load', function(){
       this.y = Math.random() * (this.game.height * 0.95 - this.height);//random spawn 95% screen height
       this.image = document.getElementById('angler1');
       this.frameY = Math.floor(Math.random() * 3); //three animations that loop on sheet, random pick one
-      this.lives = 3;
+      this.lives = 4;
       this.score = this.lives;
     }
   }
@@ -237,7 +237,7 @@ window.addEventListener('load', function(){
       
       this.image = document.getElementById('angler2');
       this.frameY = Math.floor(Math.random() * 2); //two animations that loop on sheet, random pick one
-      this.lives = 4;
+      this.lives = 5;
       this.score = this.lives;
     }
   }
@@ -262,10 +262,37 @@ window.addEventListener('load', function(){
       this.y = Math.random() * (this.game.height * 0.95 - this.height);
       this.image = document.getElementById('hivewhale');
       this.frameY = 0; // 0 bc only one row on the sprite sheet
-      this.lives = 14;
+      this.lives = 18;
       this.score = this.lives;
       this.type = 'hive';
       this.speedX = Math.random() * -1.3 - 0.4; //moves slow
+    }
+  }
+  class BulbWhale extends Enemy {
+    constructor(game) {
+      super(game);
+      this.width = 270;
+      this.height = 219;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      this.image = document.getElementById('bulbwhale');
+      this.frameY = Math.floor(Math.random() * 2);
+      this.lives = 20;
+      this.score = this.lives;
+      this.speedX = Math.random() * -1.2 - 0.2
+    }
+  }
+  class MoonFish extends Enemy {
+    constructor(game) {
+      super(game);
+      this.width = 227;
+      this.height = 240;
+      this.y = Math.random() * (this.game.height * 0.95 - this.height);
+      this.image = document.getElementById('moonfish');
+      this.frameY = 0;
+      this.lives = 10;
+      this.score = this.lives;
+      this.speedX = Math.random() * -1.2 - 2 // 2 to 3.2 px per frame
+      this.type = 'moon';
     }
   }
   class Drone extends Enemy {
@@ -328,6 +355,51 @@ window.addEventListener('load', function(){
       this.layers.forEach(layer => layer.draw(context));
     }
   }
+  class Explosion {
+    constructor(game, x, y) {
+      this.game = game;
+      this.frameX = 0;
+      this.spriteHeight = 200;
+      this.spriteWidth = 200
+      this.width = this.spriteWidth;
+      this.height = this.spriteHeight;
+      this.x = x - this.width * 0.5;
+      this.y = y - this.height * 0.5;
+      this.fps = 25;
+      this.timer = 0;
+      this.interval = 1000 / this.fps;
+      this.markedForDeletion = false;
+      this.maxFrame = 8;
+    }
+    update(frameTime){
+      this.x -= this.game.speed;
+      if (this.timer > this.interval){
+        this.frameX++;
+      }else{
+        this.timer += frameTime;
+      }
+      if (this.frameX > this.maxFrame){
+        this.markedForDeletion = true;
+      } 
+    }
+    draw(context){
+      context.drawImage(this.image, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+    }
+  }
+  class SmokeExplosion extends Explosion {
+    constructor(game, x, y){
+      super(game, x, y);
+      this.image = document.getElementById('smokeExplosion');
+    }
+
+  }
+  class FireExplosion extends Explosion {
+    constructor(game, x, y) {
+      super(game, x, y);
+      this.image = document.getElementById('fireExplosion');
+
+    }
+  }
   class UI{
     constructor(game) {
       this.game = game;
@@ -388,20 +460,21 @@ window.addEventListener('load', function(){
       this.ui = new UI(this);
       this.background = new Background(this);
       this.keys = [];
-      this.enemies =[];
+      this.enemies = [];
+      this.explosions = [];
       this.gears = [];
       this.enemyTimer = 0;
-      this.enemyInterval = 1000;
+      this.enemyInterval = 1500;
       this.ammo = 25;
       this.maxAmmo =50
       this.ammoTimer = 0;
       // replenish one ammo every 500ms
-      this.ammoInterval = 750;
+      this.ammoInterval = 400;
       this.gameOver = false;
       this.score = 0;
-      this.winningScore = 10;
+      this.winningScore = 75;
       this.gameTime = 0;
-      this.timeLimit = 20000;
+      this.timeLimit = 30000;
       // backgroundLayer scroll speed
       this.speed = 1;
       this.bug = false;
@@ -421,16 +494,20 @@ window.addEventListener('load', function(){
       }
       this.gears.forEach(gear => gear.update());
       this.gears = this.gears.filter(gear => !gear.markedForDeletion);
+      this.explosions.forEach(explosion => explosion.update(frameTime));
+      this.explosions = this.explosions.filter(explosion => !explosion.markedForDeletion);
       this.enemies.forEach(enemy => {
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
+          this.addExplosion(enemy);
+          // this.addExplosion(enemy);
           for (let i = 0; i < enemy.score; i++) { // # of gears falling depend on strength of enemy
             this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
           }
           if (enemy.type === 'lucky'){
             this.player.goPowerUp(); //powerup if collide with lucky type
-          }else{
+          }else if (!this.gameOver){
             this.score--; //lose a point for collision with non-lucky enemies
           }
         }
@@ -445,6 +522,7 @@ window.addEventListener('load', function(){
                 this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
               }
               enemy.markedForDeletion = true;
+              this.addExplosion(enemy);
               this.score += enemy.score;
               if (enemy.type === 'hive'){
                 for (let i = 0; i <5; i++){
@@ -453,9 +531,6 @@ window.addEventListener('load', function(){
               }
               if (!this.gameOver){
                 this.score += enemy.score;
-              }
-              if (this.score > this.winningScore){
-                this.gameOver = true;
               }
             }
           }
@@ -478,15 +553,26 @@ window.addEventListener('load', function(){
       this.enemies.forEach(enemy => {
         enemy.draw(context);
       });
+      this.explosions.forEach(explosion => {
+        explosion.draw(context);
+      });
       this.background.layer4.draw(context); //will appear in front of all other game objects
     }
     addEnemy(){
       const randomize = Math.random();
       if (randomize < 0.3) this.enemies.push(new Angler1(this))
-      else if (randomize < 0.5) this.enemies.push(new Angler2(this));
+      else if (randomize < 0.6) this.enemies.push(new Angler2(this));
       else if (randomize < 0.7) this.enemies.push(new HiveWhale(this));
       else {this.enemies.push(new Lucky(this))};
-      // console.log(this.enemies)
+    }
+    addExplosion(enemy){
+      const randomize = Math.random();
+      if (randomize < 0.5){
+        this.explosions.push(new SmokeExplosion(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
+      }else{
+        this.explosions.push(new FireExplosion(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
+      }
+      
     }
 
   // check collision of rectangles(sprite animation hit boxes)
@@ -512,9 +598,9 @@ window.addEventListener('load', function(){
     // reset time for next frameTime calculation
     lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.update(frameTime);
     game.draw(ctx);
     // update animation before next refresh, loop.
+    game.update(frameTime);
     requestAnimationFrame(animate);
   }
   animate(0);
