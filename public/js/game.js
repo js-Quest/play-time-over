@@ -17,6 +17,8 @@ window.addEventListener('load', function(){
           this.game.keys.push(event.key);
         } else if (event.key === ' ') {
           this.game.player.upperShot();
+        } else if (event.key === 'd'){
+          this.game.bug = !this.game.bug;
         }
         console.log(this.game.keys)
       });
@@ -62,13 +64,15 @@ window.addEventListener('load', function(){
       this.game = game;
       this.width= 120;
       this.height = 190;
-      // player starting position
-      this.x = 20;
+      this.x = 20; // player starting position
       this.y = 100;
-      // player starting speed
-      this.speedY = 0;
+      this.frameX = 0; //cycle on sprite spreadsheet horizontally
+      this.frameY = 0; //determines row of the sheet, 0 is the first row
+      this.maxFrame = 37; //there are 38 instances on the player image sprite sheet
+      this.speedY = 0; //player starting speed
       this.maxSpeed = 2.5;
       this.fireballs = [];
+      this.image = document.getElementById('player');
     }
     update(){
       if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
@@ -80,11 +84,19 @@ window.addEventListener('load', function(){
         fireball.update();
       });
       this.fireballs = this.fireballs.filter(fireball => !fireball.markedForDeletion);
+      // sprite animation
+      if (this.frameX < this.maxFrame) {
+        this.frameX++;
+      } else {
+        this.frameX = 0;
+      }
     }
     draw(context){
       // arguments: location and size measurements of player
-      context.fillStyle = 'blue';
-      context.fillRect(this.x, this.y, this.width, this.height);
+      context.fillStyle = 'black';
+      if (this.game.bug) {context.strokeRect(this.x, this.y, this.width, this.height)};
+      //9 arguments: this image, source x, source y, source width, source height, destinations(this) x y w h to specify where we want the cropped image on the canvas
+      context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height);
       this.fireballs.forEach(fireball => {
         fireball.draw(context);
       });
@@ -252,6 +264,7 @@ window.addEventListener('load', function(){
       this.timeLimit = 20000;
       // backgroundLayer scroll speed
       this.speed = 1;
+      this.bug = true;
     
     }
     update(frameTime){
