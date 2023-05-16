@@ -7,11 +7,13 @@ window.addEventListener('click', function(){
 
 const playerScores = [];
 
+
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 500;
-window.addEventListener('load', function(){
+
+window.addEventListener('load', async function(){
   // classes for encapsulation and inheritance.  
   // !REFACTOR CLASSES LATER
   class Input{
@@ -729,18 +731,3 @@ window.addEventListener('load', function(){
   }
   animate(0);
 })
-
-let timerInterval = setInterval(function () {
-  let secondsLeft = 10;
-  secondsLeft--;
-
-  if (secondsLeft === 0) {
-    console.log(document.getElementById('playerScore'))
-  }
-}, 1000);
-
-
-
-
-
-
