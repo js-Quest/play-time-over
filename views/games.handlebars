@@ -1,12 +1,18 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Bangers&display=swap"
-  rel="stylesheet"
-/>
+
+{{#if logged_in}}
+ <div class="text-dark text-right welcome">
+  <h2 class="text-center">Welcome, {{loggedUser}}!</h2>
+</div>
+{{/if}}
+
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/css/style.css" />
 <!-- get rid of favicon error in console with the code below. -->
 <link rel="shortcut icon" href="#" />
 
-<div>
+<div id = "score-container">
+  <h1 type="text" id="playerScore"></h1>
+</div>
 
   <div class="scoresContainer">
     <p class="text-center leaderboard">Leaderboards</p>
@@ -28,6 +34,7 @@
     </ol>
   </div>
 
+<div>
   <div>
 
     <canvas role="presentation" id="game-canvas"></canvas>
@@ -51,17 +58,11 @@
     <img id="razorfin" src="/assets/images/sprites/razorfin.png" />
 
     <!-- effects -->
-    <img id="gears" src="/assets/images/visual-effects/gears.png" />
-    <img
-      id="smokeExplosion"
-      src="/assets/images/visual-effects/smokeExplosion.png"
-    />
-    <img
-      id="fireExplosion"
-      src="/assets/images/visual-effects/fireExplosion.png"
-    />
-    <img id="shield" src="/assets/images/visual-effects/shield.png" />
-    <img id="fireball" src="/assets/images/sprites/fireball.png" />
+    <img id="gears" src="/assets/images/visual-effects/gears.png">
+    <img id="smokeExplosion" src="/assets/images/visual-effects/smokeExplosion.png">
+    <img id="fireExplosion" src="/assets/images/visual-effects/fireExplosion.png">
+    <img id="shield" src="/assets/images/visual-effects/shield.png">
+    <img id="fireball" src="/assets/images/sprites/fireball.png">
 
     <!-- audio -->
     <audio id="level1" src="/assets/audio/theme-songs/level1.mp3"></audio>
@@ -69,28 +70,12 @@
     <audio id="level3" src="/assets/audio/theme-songs/level3.mp3"></audio>
     <audio id="level4" src="/assets/audio/theme-songs/home-score.mp3"></audio>
     <audio id="powerup" src="/assets/audio/sound-effects/powerup.wav"></audio>
-    <audio
-      id="powerdown"
-      src="/assets/audio/sound-effects/powerdown.wav"
-    ></audio>
+    <audio id="powerdown" src="/assets/audio/sound-effects/powerdown.wav"></audio>
     <audio id="hit" src="/assets/audio/sound-effects/hit.wav"></audio>
-    <audio
-      id="explosion"
-      src="/assets/audio/sound-effects/explosion.wav"
-    ></audio>
-
-    <audio
-      id="shieldSound"
-      src="/assets/audio/sound-effects/shield.wav"
-    ></audio>
+    <audio id="explosion" src="/assets/audio/sound-effects/explosion.wav"></audio>
+    <audio id="shieldSound" src="/assets/audio/sound-effects/shield.wav"></audio>
     <audio id="shot" src="/assets/audio/sound-effects/shot.wav"></audio>
-
-    <audio
-      id="shield-sound"
-      src="/assets/audio/sound-effects/shield.wav"
-    ></audio>
-    <audio id="shot" src="/assets/audio/sound-effects/shot.wav"></audio>
-
+    
   </div>
 </div>
 

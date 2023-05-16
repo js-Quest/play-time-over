@@ -1,4 +1,4 @@
-const { Highscore } = require('../../models');
+// const { Highscore } = require('../../models');
 // const { User } = require('../../models');
 // const router = require('express').Router();
 

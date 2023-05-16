@@ -83,8 +83,9 @@ h1 a {
 
 .welcome {
   margin-right: 325px;
-  margin-top: 30px;
+  margin-top: 5%;
   text-shadow: rgb(13, 46, 235) 0 0 10px;
+  width: 100%;
 }
 
 .leaderboard{  
@@ -94,7 +95,6 @@ h1 a {
  
 }
  
-
 #layer1,
 #layer2,
 #layer3,
@@ -114,6 +114,11 @@ h1 a {
 #shield,
 #fireball,
 #stalker,
-#razorfin {
+#razorfin,
+h1 {
   display: none;
 }
+.text-center {
+  text-align: center !important;
+}
+  
