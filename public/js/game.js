@@ -13,7 +13,6 @@ canvas.width = 800;
 canvas.height = 500;
 window.addEventListener('load', function(){
   // classes for encapsulation and inheritance.  
-  // !REFACTOR CLASSES LATER
   class Input{
     constructor(game){
       this.game = game;
@@ -26,7 +25,7 @@ window.addEventListener('load', function(){
           this.game.keys.push(event.key);
         } else if (event.key === ' ') {
           this.game.player.upperShot();
-        } else if (event.key === 'd'){ //toggle git boxes on and off
+        } else if (event.key === 'd'){ //toggle hit boxes on and off
           this.game.bug = !this.game.bug;
         }
       });
@@ -103,7 +102,7 @@ window.addEventListener('load', function(){
       }
     }
     draw(context){
-      context.save() //anything between save/restore only affects code in between bc you call restore later.  
+      context.save() //anything between save/restore only affects code in between bc you call restore later.  Otherwise the whole canvas spins.
       context.translate(this.x, this.y); //need to specify where we want the rotating effect.
       context.rotate(this.angle)
       //9 args get one frame of the sprite sheet: image, source x y w h, destination x y w h.  
@@ -121,19 +120,19 @@ window.addEventListener('load', function(){
       this.y = 100;
       this.frameX = 0; //cycle on sprite spreadsheet horizontally
       this.frameY = 0; //determines row of the sheet, 0 is the first row
-      this.maxFrame = 37; //there are 38 instances on the player image sprite sheet
+      this.maxFrame = 37; //there are 38 instances per player image sprite sheet row
       this.speedY = 0; //player starting speed
       this.maxSpeed = 2.5;
       this.fireballs = [];
       this.image = document.getElementById('player');
       this.powerUp = false;
       this.powerUpTimer = 0;
-      this.powerUpLimit = 30000;
+      this.powerUpLimit = 10000;//10 seconds of powerup
     }
     update(frameTime){
       if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
       else if (this.game.keys.includes('ArrowDown')) this.speedY = this.maxSpeed;
-      else this.speedY = 0; 
+      else this.speedY = 0; //speed control for key down events
       this.y += this.speedY;
       // vertical boundary so player doesn't disappear off screen, only half off screen
       if (this.y > this.game.height - this.height * 0.5) this.y = this.game.height - this.height * 0.5;
