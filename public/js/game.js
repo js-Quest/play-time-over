@@ -717,7 +717,7 @@ window.addEventListener('load', async function(){
     game.update(frameTime);
     requestAnimationFrame(animate);
     if(game.gameOver === true){
-      console.log(playerScores);
+      // console.log(playerScores);
       return playerScores;
     }
   }
@@ -726,3 +726,20 @@ window.addEventListener('load', async function(){
 // console.log(document.getElementById('playerScore'));
 // console.log(playerScores);
 // console.log(document.getElementById('playserScore').value)
+let playerScore = document.querySelector('#playerScore')  
+const {Highscore} = require('../../models')
+
+setTimeout( async function(req,res,next){ 
+
+    console.log('ThisWorks')
+
+ await Highscore.create({
+    score: playerScore.textContent,
+    user_id: req.session.user_id,
+})
+
+console.log('ThisWorks3333')
+
+next();
+  
+},10000);
