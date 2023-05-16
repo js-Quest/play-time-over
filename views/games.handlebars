@@ -1,17 +1,18 @@
-
 {{#if logged_in}}
- <div class="text-dark text-right">
+ <div class="text-dark text-right welcome">
   <h2 >Welcome, {{loggedUser}}!</h2>
 </div>
 {{/if}}
+ 
 
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./public/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- get rid of favicon error in console with the code below. -->
   <link rel="shortcut icon" href="#">
 
-
+<div id = "score-container">
   <h1 type="text" id="playerScore"></h1>
+  </div>
   <canvas role="presentation" id="game-canvas"></canvas>
   
   <!-- parallax scrolling environment -->
@@ -58,7 +59,8 @@
   <audio id="shield-sound" src="/assets/audio/sound-effects/shield.wav"></audio>
   <audio id="shot" src="/assets/audio/sound-effects/shot.wav"></audio>
 
-  <script type="module" src="/js/game.js"></script>
+   <script src="/js/test.js"></script>
+  <script type="module" src="/js/game.js"></script> 
 
 
 

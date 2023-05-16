@@ -1,5 +1,4 @@
-
-#game-canvas{
+#game-canvas {
   border: 5px solid black;
   background: rgb(242, 142, 10);
   max-width: 100%;
@@ -9,15 +8,55 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Bangers', cursive ;
+  font-family: "Bangers", cursive;
+  border-radius: 10px;
 }
 
 body {
-  background-image: url(../assets/images/2205_w015_n001_829b_p15_829.jpg) ;
+  background-image: url(../assets/images/2205_w015_n001_829b_p15_829.jpg);
   background-size: cover;
 }
 
+h1 a {
+  text-shadow: rgb(13, 46, 235) 0 0 10px;
+  animation: shadows 1.5s infinite;
+  transition: all .6s ease;
+}
 
+@keyframes shadows {
+  0% {
+    text-shadow: #48abe0 0 0 10px;
+    box-shadow: 0px 0px 20px 10px #48abe0;
+  }
+  50% {
+    text-shadow: blueviolet 0 0 10px;
+    box-shadow: 0px 0px 20px 10px blueviolet;
+  }
+  75% {
+    text-shadow: rebeccapurple 0 0 10px;
+    box-shadow: 0px 0px 20px 10px rebeccapuprle;
+  }
+  100% {
+    text-shadow: #48abe0 0 0 10px;
+    box-shadow: 0px 0px 20px 10px #48abe0;
+  }
+}
+
+#logout {
+  background-color: brown;
+  color: white;
+  height: 36px;
+  width: 75px;
+  margin-top: 45px;
+  border-radius: 10px;
+}
+
+.welcome {
+  margin-right: 325px;
+  margin-top: 30px;
+  text-shadow: rgb(13, 46, 235) 0 0 10px;
+}
+ 
 
 #layer1,
 #layer2,
@@ -28,7 +67,7 @@ body {
 #angler2,
 #lucky,
 #projectile,
-#gears, 
+#gears,
 #hivewhale,
 #drone,
 #smokeExplosion,

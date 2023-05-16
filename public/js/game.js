@@ -7,11 +7,12 @@ window.addEventListener('click', function(){
 
 const playerScores = [];
 
-window.addEventListener('load', function(){
+window.addEventListener('load', async function(){
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
   canvas.width = 800;
   canvas.height = 500;
+  
   // classes for encapsulation and inheritance.  
   // !REFACTOR CLASSES LATER
   class Input{
@@ -716,7 +717,7 @@ window.addEventListener('load', function(){
     game.update(frameTime);
     requestAnimationFrame(animate);
     if(game.gameOver === true){
-      console.log(playerScores);
+      // console.log(playerScores);
       return playerScores;
     }
   }
@@ -725,3 +726,20 @@ window.addEventListener('load', function(){
 // console.log(document.getElementById('playerScore'));
 // console.log(playerScores);
 // console.log(document.getElementById('playserScore').value)
+let playerScore = document.querySelector('#playerScore')  
+const {Highscore} = require('../../models')
+
+setTimeout( async function(req,res,next){ 
+
+    console.log('ThisWorks')
+
+ await Highscore.create({
+    score: playerScore.textContent,
+    user_id: req.session.user_id,
+})
+
+console.log('ThisWorks3333')
+
+next();
+  
+},10000);
