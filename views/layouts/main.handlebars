@@ -11,20 +11,23 @@
     <link rel="stylesheet" href="/css/style.css" />
     <title>PLAY-TIME-OVER</title>
   </head>
-  <body >
+  <body>
 
     <header class="display-flex justify-center p-2 bg-dark">
       <h1>
         <a href="/">PLAY-TIME-OVER</a>
       </h1>
-    </header> 
-        <div class="text-center p-1">
-          <nav>
-            {{#if logged_in}}
-              <button class="no-button " id="logout">LOGOUT</button>
-            {{/if}}
-          </nav>
-        </div> 
+    </header>
+    <div class="text-center p-1">
+      {{#if logged_in}}
+        <button class="no-button" id="logout">LOGOUT</button>
+        {{! button handler in js/logout.js }}
+        <button class="no-button" id="playAgain">PLAY AGAIN</button>
+        <div class="text-dark text-right welcome">
+          <h2>Welcome, {{loggedUser}}!</h2>
+        </div>
+      {{/if}}
+    </div>
     {{{body}}}
 
     {{#if logged_in}}
@@ -32,4 +35,5 @@
     {{/if}}
 
   </body>
+
 </html>
