@@ -115,7 +115,8 @@ h1 a {
 #fireball,
 #stalker,
 #razorfin,
-h1 {
+#playerScore
+{
   display: none;
 }
 .text-center {
