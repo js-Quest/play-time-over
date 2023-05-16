@@ -185,7 +185,7 @@ window.addEventListener('load', function(){
     lowerShot(){
       if (this.game.ammo > 0) {
         // !need to position the shot origin location
-        this.fireballs.push(new Fireball(this.game, this.x +85, this.y +100));
+        this.fireballs.push(new Fireball(this.game, this.x +85, this.y +170));
         this.game.ammo--;
       }
     }
