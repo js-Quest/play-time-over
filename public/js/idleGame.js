@@ -383,15 +383,18 @@ window.addEventListener('load', async function () {
       if (this.game.gameOver) {
         context.textAlign = 'center';
         let messageTop;
-          messageTop = 'Sign in to Play!';
-        
-        context.font = `100px ${this.fontFamily}`
+        let messageBottom;
+        messageTop = 'click above!';
+        messageBottom = 'Sign in to Play!'
+        context.font = `70px ${this.fontFamily}`
         // the message, x and y destination coordinates.  *0.5 centers it.
-        context.fillText(messageTop, this.game.width * 0.5, this.game.height * 0.5)
-        context.font = `50px ${this.fontFamily}`
+        context.fillText(messageTop, this.game.width * 0.5, this.game.height * 0.5 - 20)
+        context.font = `40px ${this.fontFamily}`
+        context.fillText(messageBottom, this.game.width * 0.5, this.game.height * 0.5 + 40)
         // this next line errors and clears the sprites off the canvas to show the one message 
         // this is what we want to happen.
-        context.fillText(messageBottom, this.game.width * 0.5, this.game.height * 0.5 + 50)
+        context.fillText(message, this.game.width * 0.5, this.game.height * 0.5 + 40)
+
       }
       // ammo bar
       if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
