@@ -7,40 +7,38 @@ window.addEventListener('click', function(){
 
 const playerScores = [];
 
-
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 500;
-
-window.addEventListener('load', async function(){
+window.addEventListener('load', function(){
   // classes for encapsulation and inheritance.  
   // !REFACTOR CLASSES LATER
-  // class Input{
-  //   constructor(game){
-  //     this.game = game;
-  //     // movement up and down of player on key events
-  //     window.addEventListener('keydown', event => {
-  //       themeMusic.play(); //theme music plays on any keydown event
-  //       if (( (event.key === 'ArrowUp')  ||
-  //             (event.key === 'ArrowDown') )
-  //       && this.game.keys.indexOf(event.key) === -1){
-  //         this.game.keys.push(event.key);
-  //       } else if (event.key === ' ') {
-  //         this.game.player.upperShot();
-  //       } else if (event.key === 'd'){ //toggle git boxes on and off
-  //         this.game.bug = !this.game.bug;
-  //       }
-  //     });
-  //     // one key in array at a time
-  //     window.addEventListener('keyup', event => {
-  //       if (this.game.keys.indexOf(event.key) > -1){
-  //         this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
-  //       }
-  //     })
-  //   }
+  class Input{
+    constructor(game){
+      this.game = game;
+      // movement up and down of player on key events
+      window.addEventListener('keydown', event => {
+        themeMusic.play(); //theme music plays on any keydown event
+        if (( (event.key === 'ArrowUp')  ||
+              (event.key === 'ArrowDown') )
+        && this.game.keys.indexOf(event.key) === -1){
+          this.game.keys.push(event.key);
+        } else if (event.key === ' ') {
+          this.game.player.upperShot();
+        } else if (event.key === 'd'){ //toggle git boxes on and off
+          this.game.bug = !this.game.bug;
+        }
+      });
+      // one key in array at a time
+      window.addEventListener('keyup', event => {
+        if (this.game.keys.indexOf(event.key) > -1){
+          this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
+        }
+      })
+    }
 
-  // }
+  }
   class Fireball{
     constructor(game, x, y) {
       this.game = game;
@@ -715,9 +713,8 @@ window.addEventListener('load', async function(){
     game.update(frameTime);
     requestAnimationFrame(animate);
     if(game.gameOver === true){
-      // timeout function to let game play long enough for the end messages
+      // timeout function to let game play long enough for end messages to appear
       setTimeout(function () {
-        // get scores or set up an array if none exist
         let highScores = JSON.parse(window.localStorage.getItem("highScores")) || [];
         console.log(game.score);
         var newScore = {
@@ -727,7 +724,67 @@ window.addEventListener('load', async function(){
         highScores.push(newScore);
         window.localStorage.setItem("highScores", JSON.stringify(highScores));
       }, 9000);
+
+
+
+      // console.log(playerScores);  
+       // playerScores.length = 1;
+        // playerScores.push(finalScore);
+        //   const result = playerScores.slice(-1);
+          // console.log(result);
+      
+      // or local storage, then directly navigate to other page.  Then make the fetch call from backend to the local storage
+      
+      //run a fetch post route to the back end (same as form submitting in activities) move to new page, then fetch most recent score on new page, use session info to create that table
+      // return playerScores;
     }
   }
   animate(0);
 })
+// console.log(document.getElementById('playerScore'));
+// console.log(playerScores);
+
+let timerInterval = setInterval(function () {
+  let secondsLeft = 10;
+  secondsLeft--;
+
+  if (secondsLeft === 0) {
+    console.log(document.getElementById('playerScore'))
+  }
+}, 1000);
+
+
+// Function to be executed at each interval
+// function timerFunction() {
+//   console.log("$$$$$$$$$$");
+  // Add your code here for the actions you want to perform at each interval
+// }
+
+// Set the interval to execute the timerFunction every 1 second (1000 milliseconds)
+// const interval = setInterval(timerFunction, 1000);
+
+// To stop the interval after a certain period of time (e.g., 5 seconds)
+// setTimeout(function () {
+//   clearInterval(interval); // Stop the interval
+//   const imageDataURL = canvas.toDataURL(); // Get the canvas content as a data URL
+//   const extractedText = extractTextFromDataURL(imageDataURL); // Extract the text from the data URL
+  
+//   function extractTextFromDataURL(dataURL) {
+//     const matches = dataURL.match(/,(.*)$/); // Extract the base64-encoded part of the data URL
+//     if (matches) {
+//       const base64Data = matches[1];
+//       const decodedData = atob(base64Data); // Decode the base64 data
+//       console.log(decodedData)
+//       return decodedData;
+//     }
+//     return null;
+//   }
+//   console.log(extractedText); 
+//   console.log("Did i get data");
+// }, 5000);
+
+
+
+
+
+
