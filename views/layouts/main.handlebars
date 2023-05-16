@@ -18,18 +18,23 @@
         <a href="/">PLAY-TIME-OVER</a>
       </h1>
     </header> 
-        <div class="text-center p-1">
-          <nav>
+        <div class="text-center p-1"> 
             {{#if logged_in}}
               <button class="no-button " id="logout">LOGOUT</button>
-            {{/if}}
-          </nav>
+            {{/if}} 
         </div> 
     {{{body}}}
+
+
+
+    
 
     {{#if logged_in}}
       <script src="/js/logout.js"></script>
     {{/if}}
 
+
   </body>
+  
+
 </html>
