@@ -1,4 +1,12 @@
 
+const themeMusic = document.getElementById("level1");
+themeMusic.volume = 0.5;
+window.addEventListener('click', function(){
+  themeMusic.pause()  //pause theme music by clicking on the window
+})
+
+const playerScores = [];
+
 window.addEventListener('load', function(){
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
@@ -11,6 +19,7 @@ window.addEventListener('load', function(){
       this.game = game;
       // movement up and down of player on key events
       window.addEventListener('keydown', event => {
+        themeMusic.play(); //theme music plays on any keydown event
         if (( (event.key === 'ArrowUp')  ||
               (event.key === 'ArrowDown') )
         && this.game.keys.indexOf(event.key) === -1){
@@ -20,14 +29,12 @@ window.addEventListener('load', function(){
         } else if (event.key === 'd'){ //toggle git boxes on and off
           this.game.bug = !this.game.bug;
         }
-        // console.log(this.game.keys)
       });
       // one key in array at a time
       window.addEventListener('keyup', event => {
         if (this.game.keys.indexOf(event.key) > -1){
           this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
         }
-        // console.log(this.game.keys)
       })
     }
 
@@ -37,23 +44,27 @@ window.addEventListener('load', function(){
       this.game = game;
       this.x = x;
       this.y = y;
-      this.width = 10;
-      this.height = 3;
+      this.width = 36.25;
+      this.height = 20;
       this.speed = 3;
       this.markedForDeletion = false;
       this.image = document.getElementById('fireball');
-
-
+      this.frameX = 0; //there is one row in this sprite sheet
+      this.maxFrame = 3; //there are 4 frames in this sprite sheet
     }
-    update(){
+    update(frameTime){
       this.x += this.speed //speed relative to position of origination
+      if (this.frameX < this.maxFrame){
+        this.frameX++;
+      }else{
+        this.frameX = 0;
+      }
       if (this.x > this.game.width * 0.9){ //delete if at 90% of canvas width
         this.markedForDeletion = true;
       }
     }
-    draw(context){
-      context.drawImage(this.image, this.x, this.y);
-
+    draw(context){ //draw animation for fireball
+      context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
     }
   }
   class Gear{
@@ -117,7 +128,7 @@ window.addEventListener('load', function(){
       this.image = document.getElementById('player');
       this.powerUp = false;
       this.powerUpTimer = 0;
-      this.powerUpLimit = 10000;
+      this.powerUpLimit = 30000;
     }
     update(frameTime){
       if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
@@ -129,7 +140,7 @@ window.addEventListener('load', function(){
       else if (this.y < -this.height * 0.5) this.y = -this.height * 0.5;
       // fireballs
       this.fireballs.forEach(fireball => {
-        fireball.update();
+        fireball.update(frameTime);
       });
       this.fireballs = this.fireballs.filter(fireball => !fireball.markedForDeletion);
       // sprite animation
@@ -144,6 +155,7 @@ window.addEventListener('load', function(){
           this.powerUpTimer = 0;
           this.powerUp = false;
           this.frameY = 0;
+          this.game.sound.powerDown();
         } else {
           this.powerUpTimer += frameTime;
           this.frameY = 1; //the second row of the player sprite sheet
@@ -167,12 +179,13 @@ window.addEventListener('load', function(){
         this.fireballs.push(new Fireball(this.game, this.x +80, this.y +30));
         this.game.ammo--;
       }
+      this.game.sound.shot();
       if(this.powerUp){ this.lowerShot()};
     }
     lowerShot(){
       if (this.game.ammo > 0) {
         // !need to position the shot origin location
-        this.fireballs.push(new Fireball(this.game, this.x +85, this.y +100));
+        this.fireballs.push(new Fireball(this.game, this.x +85, this.y +170));
         this.game.ammo--;
       }
     }
@@ -182,6 +195,7 @@ window.addEventListener('load', function(){
       if (this.game.ammo < this.game.maxAmmo){
         this.game.ammo = this.game.maxAmmo;
       };
+      this.game.sound.powerUp();
     }   
   }
   class Enemy{
@@ -276,9 +290,9 @@ window.addEventListener('load', function(){
       this.y = Math.random() * (this.game.height * 0.95 - this.height);
       this.image = document.getElementById('bulbwhale');
       this.frameY = Math.floor(Math.random() * 2);
-      this.lives = 20;
+      this.lives = 18;
       this.score = this.lives;
-      this.speedX = Math.random() * -1.2 - 0.2
+      this.speedX = Math.random() * -1.2 - 2
     }
   }
   class MoonFish extends Enemy {
@@ -289,7 +303,7 @@ window.addEventListener('load', function(){
       this.y = Math.random() * (this.game.height * 0.95 - this.height);
       this.image = document.getElementById('moonfish');
       this.frameY = 0;
-      this.lives = 10;
+      this.lives = 12;
       this.score = this.lives;
       this.speedX = Math.random() * -1.2 - 2 // 2 to 3.2 px per frame
       this.type = 'moon';
@@ -400,6 +414,72 @@ window.addEventListener('load', function(){
 
     }
   }
+  class SoundEffects {
+    constructor(){
+      this.powerUpSound = document.getElementById('powerup');
+      this.powerDownSound = document.getElementById('powerdown');
+      this.hitSound = document.getElementById('hit');
+      this.explosionSound = document.getElementById('explosion');
+      this.shieldSound = document.getElementById('shield-sound');
+      this.shotSound = document.getElementById('shot');
+    }
+    powerUp(){
+      this.powerUpSound.currentTime = 0; //play same file again if method is called, using the built in currentTime media property
+      this.powerUpSound.play();
+    }
+    powerDown(){
+      this.powerDownSound.currentTime = 0;
+      this.powerDownSound.play();
+    }
+    hit(){
+      this.hitSound.currentTime = 0;
+      this.hitSound.play();
+    }
+    explosion(){
+      this.explosionSound.currentTime = 0;
+      this.explosionSound.play();
+    }
+    shield(){
+      this.shieldSound.currentTime = 0;
+      this.shieldSound.play();
+    }
+    shot(){
+      this.shotSound.currentTime = 0;
+      this.shotSound.play();
+    } 
+  }
+  class Shield {
+    constructor(game) {
+      this.game = game;
+      this.width = this.game.player.width;
+      this.height = this.game.player.height;
+      this.frameX = 0;
+      this.maxFrame = 24;
+      this.image = document.getElementById('shield');
+      this.fps = 30;
+      this.timer = 0;
+      this.interval = 1000 / this.fps;
+    }
+    update(frameTime) {
+      if (this.frameX <= this.maxFrame) {
+        if (this.timer > this.interval) {
+          this.frameX++;
+          this.timer = 0;
+        } else {
+          this.timer = + frameTime;
+        }
+        this.frameX++;
+      };
+    }
+    draw(context) {
+      context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.game.player.x, this.game.player.y, this.width, this.height);
+    };
+    reset() {
+      this.frameX = 0;
+      this.game.sound.shield();
+    }
+
+  }
   class UI{
     constructor(game) {
       this.game = game;
@@ -424,21 +504,42 @@ window.addEventListener('load', function(){
 
       // game over
       if (this.game.gameOver){
+        // console.log(this.game.score)
+        let h1Score = document.getElementById('playerScore');
+        let finalScore = this.game.score;
+        playerScores.length = 1;
+        playerScores.push(finalScore);
+          const result = playerScores.slice(-1);
+          // console.log(result);
+        h1Score.innerHTML = `${finalScore}`;
         context.textAlign='center';
         let messageTop;
         let messageBottom;
         if(this.game.score > this.game.winningScore){
           messageTop = 'You did it.'
           messageBottom = 'You beat an easy game.'
+          // playerScores.push(finalScore);
+          // console.log(playerScores);
         }else{
           messageTop = 'Ya blew it!';
           messageBottom = 'Try again, looooserrrrr!';
+          // playerScores.push(finalScore);
+          // console.log(playerScores);
         }
         context.font = `100px ${this.fontFamily}`
         // the message, x and y destination coordinates.  *0.5 centers it.
         context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
         context.font = `50px ${this.fontFamily}`
-        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50) 
+        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50)
+        // playerScores.push(finalScore);
+        // console.log(playerScores); 
+        // return playerScores;
+        // function getValue() {
+        //   var h1 = document.getElementById('playerScore');
+        //   var h1content = h1.textContent;
+        //   console.log(h1content);
+        // }
+        // getValue();
       }
       // ammo bar
       if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
@@ -459,6 +560,8 @@ window.addEventListener('load', function(){
       this.input = new Input(this);
       this.ui = new UI(this);
       this.background = new Background(this);
+      this.shield = new Shield(this);
+      this.sound = new SoundEffects();
       this.keys = [];
       this.enemies = [];
       this.explosions = [];
@@ -474,7 +577,7 @@ window.addEventListener('load', function(){
       this.score = 0;
       this.winningScore = 75;
       this.gameTime = 0;
-      this.timeLimit = 30000;
+      this.timeLimit = 10000;
       // backgroundLayer scroll speed
       this.speed = 1;
       this.bug = false;
@@ -492,6 +595,7 @@ window.addEventListener('load', function(){
       } else {
         this.ammoTimer += frameTime;
       }
+      this.shield.update(frameTime);
       this.gears.forEach(gear => gear.update());
       this.gears = this.gears.filter(gear => !gear.markedForDeletion);
       this.explosions.forEach(explosion => explosion.update(frameTime));
@@ -501,6 +605,8 @@ window.addEventListener('load', function(){
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
           this.addExplosion(enemy);
+          this.sound.hit();
+          this.shield.reset();
           // this.addExplosion(enemy);
           for (let i = 0; i < enemy.score; i++) { // # of gears falling depend on strength of enemy
             this.gears.push(new Gear(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5)); //gears originate from center of enemy sprite
@@ -523,11 +629,15 @@ window.addEventListener('load', function(){
               }
               enemy.markedForDeletion = true;
               this.addExplosion(enemy);
+              this.sound.explosion();
               this.score += enemy.score;
               if (enemy.type === 'hive'){
                 for (let i = 0; i <5; i++){
                   this.enemies.push(new Drone(this, enemy.x + Math.random() * enemy.width, enemy.y + Math.random() * enemy.height * 0.5)); //random spawn within whale coords
                 }
+              }
+              if (enemy.type === 'moon'){
+                this.player.goPowerUp(); //powerup if you destroy a moonfish
               }
               if (!this.gameOver){
                 this.score += enemy.score;
@@ -548,6 +658,7 @@ window.addEventListener('load', function(){
       this.background.draw(context);
       this.ui.draw(context);
       this.player.draw(context);
+      this.shield.draw(context);
       this.gears.forEach(gear => gear.draw(context));
       // console.log(this.gears)
       this.enemies.forEach(enemy => {
@@ -562,7 +673,9 @@ window.addEventListener('load', function(){
       const randomize = Math.random();
       if (randomize < 0.3) this.enemies.push(new Angler1(this))
       else if (randomize < 0.6) this.enemies.push(new Angler2(this));
-      else if (randomize < 0.7) this.enemies.push(new HiveWhale(this));
+      else if (randomize < 0.7) this.enemies.push(new BulbWhale(this));
+      else if (randomize < 0.8) this.enemies.push(new HiveWhale(this));
+      else if (randomize < 0.9) this.enemies.push(new MoonFish(this));
       else {this.enemies.push(new Lucky(this))};
     }
     addExplosion(enemy){
@@ -602,6 +715,13 @@ window.addEventListener('load', function(){
     // update animation before next refresh, loop.
     game.update(frameTime);
     requestAnimationFrame(animate);
+    if(game.gameOver === true){
+      console.log(playerScores);
+      return playerScores;
+    }
   }
   animate(0);
 })
+// console.log(document.getElementById('playerScore'));
+// console.log(playerScores);
+// console.log(document.getElementById('playserScore').value)
