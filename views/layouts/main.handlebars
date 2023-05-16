@@ -11,23 +11,20 @@
     <link rel="stylesheet" href="/css/style.css" />
     <title>TEST VIEW</title>
   </head>
-  <body>
+  <body >
 
     <header class="display-flex justify-center p-2 bg-dark">
       <h1>
         <a href="/">PLAY-TIME-OVER</a>
       </h1>
-      <div>
-        <div class="text-right">
+    </header> 
+        <div class="text-center p-1">
           <nav>
             {{#if logged_in}}
-              <a class="no-button" id="logout">logout</a>
+              <button class="no-button" id="logout">logout</button>
             {{/if}}
           </nav>
-        </div>
-      </div>
-    </header>
-
+        </div> 
     {{{body}}}
 
     {{#if logged_in}}

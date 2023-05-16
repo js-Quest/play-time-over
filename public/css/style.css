@@ -12,6 +12,13 @@
   font-family: 'Bangers', cursive ;
 }
 
+body {
+  background-image: url(../assets/images/2205_w015_n001_829b_p15_829.jpg) ;
+  background-size: cover;
+}
+
+
+
 #layer1,
 #layer2,
 #layer3,
