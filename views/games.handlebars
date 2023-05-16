@@ -5,8 +5,14 @@
 {{/if}}
 
 
+{{#if logged_in}}
+ <div class="text-dark text-right">
+  <h2 >Welcome, {{loggedUser}}!</h2>
+</div>
+{{/if}}
+
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="./public/css/style.css">
   <!-- get rid of favicon error in console with the code below. -->
   <link rel="shortcut icon" href="#">
 
@@ -14,6 +20,7 @@
   <h1 type="text" id="playerScore"></h1>
   </div>
   <canvas role="presentation" id="game-canvas"></canvas>
+  
   <!-- parallax scrolling environment -->
   <img id="layer1" src="/assets/images/layers/bubbles-layer.png">
   <img id="layer2" src="/assets/images/layers/layer2.png">
@@ -40,6 +47,7 @@
   <img id="shield" src="/assets/images/visual-effects/shield.png">
   <img id="fireball" src="/assets/images/sprites/fireball.png">
 
+ 
   <!-- audio -->
   <audio id="level1" src="/assets/audio/theme-songs/level1.mp3"></audio>
   <audio id="level2" src="/assets/audio/theme-songs/level3.mp3"></audio>
@@ -49,61 +57,15 @@
   <audio id="powerdown" src="/assets/audio/sound-effects/powerdown.wav"></audio>
   <audio id="hit" src="/assets/audio/sound-effects/hit.wav"></audio>
   <audio id="explosion" src="/assets/audio/sound-effects/explosion.wav"></audio>
+
+  <audio id="shieldSound" src="/assets/audio/sound-effects/shield.wav"></audio>
+  <audio id="shot" src="/assets/audio/sound-effects/shot.wav"></audio>
+
+
   <audio id="shield-sound" src="/assets/audio/sound-effects/shield.wav"></audio>
   <audio id="shot" src="/assets/audio/sound-effects/shot.wav"></audio>
 
   <script type="module" src="/js/game.js"></script>
 
 
-
-{{!-- 
-
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <!-- get rid of favicon error in console with the code below. -->
-  <link rel="shortcut icon" href="#">
-
-
-  <h1 type="text" id="playerScore"></h1>
-  <canvas role="presentation" id="game-canvas"></canvas>
-  <!-- parallax scrolling environment -->
-  <img id="layer1" src="/assets/images/layers/bubbles-layer.png">
-  <img id="layer2" src="/assets/images/layers/layer2.png">
-  <img id="layer3" src="/assets/images/layers/layer3.png">
-  <img id="layer4" src="/assets/images/layers/layer4.png">
-
-
-  <!-- characters -->
-  <img id="player" src="/assets/images/sprites/player.png">
-  <img id="angler1" src="/assets/images/sprites/angler1.png">
-  <img id="angler2" src="/assets/images/sprites/angler2.png">
-  <img id="lucky" src="/assets/images/sprites/lucky.png">
-  <img id="hivewhale" src="/assets/images/sprites/hivewhale.png">
-  <img id="drone" src="/assets/images/sprites/drone.png">
-  <img id="bulbwhale" src="/assets/images/sprites/bulbwhale.png">
-  <img id="moonfish" src="/assets/images/sprites/moonfish.png">
-  <img id="stalker" src="/assets/images/sprites/stalker.png">
-  <img id="razorfin" src="/assets/images/sprites/razorfin.png">
-
-  <!-- effects -->
-  <img id="gears" src="/assets/images/visual-effects/gears.png">
-  <img id="smokeExplosion" src="/assets/images/visual-effects/smokeExplosion.png">
-  <img id="fireExplosion" src="/assets/images/visual-effects/fireExplosion.png">
-  <img id="shield" src="/assets/images/visual-effects/shield.png">
-  <img id="fireball" src="/assets/images/sprites/fireball.png">
-
-  <!-- audio -->
-  <audio id="level1" src="/assets/audio/theme-songs/level1.mp3"></audio>
-  <audio id="level2" src="/assets/audio/theme-songs/level3.mp3"></audio>
-  <audio id="level3" src="/assets/audio/theme-songs/level3.mp3"></audio>
-  <audio id="level4" src="/assets/audio/theme-songs/home-score.mp3"></audio>
-  <audio id="powerup" src="/assets/audio/sound-effects/powerup.wav"></audio>
-  <audio id="powerdown" src="/assets/audio/sound-effects/powerdown.wav"></audio>
-  <audio id="hit" src="/assets/audio/sound-effects/hit.wav"></audio>
-  <audio id="explosion" src="/assets/audio/sound-effects/explosion.wav"></audio>
-  <audio id="shield-sound" src="/assets/audio/sound-effects/shield.wav"></audio>
-  <audio id="shot" src="/assets/audio/sound-effects/shot.wav"></audio>
-
-  <script type="module" src="/js/game.js"></script>
- --}}
 
