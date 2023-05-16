@@ -7,12 +7,13 @@ window.addEventListener('click', function(){
 
 const playerScores = [];
 
+
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 500;
+
 window.addEventListener('load', async function(){
-  const canvas = document.getElementById('game-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 800;
-  canvas.height = 500;
-  
   // classes for encapsulation and inheritance.  
   // !REFACTOR CLASSES LATER
   class Input{
@@ -508,9 +509,9 @@ window.addEventListener('load', async function(){
         // console.log(this.game.score)
         let h1Score = document.getElementById('playerScore');
         let finalScore = this.game.score;
-        playerScores.length = 1;
-        playerScores.push(finalScore);
-          const result = playerScores.slice(-1);
+        // playerScores.length = 1;
+        // playerScores.push(finalScore);
+        //   const result = playerScores.slice(-1);
           // console.log(result);
         h1Score.innerHTML = `${finalScore}`;
         context.textAlign='center';
@@ -532,15 +533,12 @@ window.addEventListener('load', async function(){
         context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
         context.font = `50px ${this.fontFamily}`
         context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50)
-        // playerScores.push(finalScore);
-        // console.log(playerScores); 
-        // return playerScores;
-        // function getValue() {
-        //   var h1 = document.getElementById('playerScore');
-        //   var h1content = h1.textContent;
-        //   console.log(h1content);
-        // }
-        // getValue();
+
+       
+       
+
+        
+        
       }
       // ammo bar
       if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
@@ -578,7 +576,7 @@ window.addEventListener('load', async function(){
       this.score = 0;
       this.winningScore = 75;
       this.gameTime = 0;
-      this.timeLimit = 10000;
+      this.timeLimit = 9000;
       // backgroundLayer scroll speed
       this.speed = 1;
       this.bug = false;
@@ -717,29 +715,19 @@ window.addEventListener('load', async function(){
     game.update(frameTime);
     requestAnimationFrame(animate);
     if(game.gameOver === true){
-      // console.log(playerScores);
-      return playerScores;
+      // timeout function to let game play long enough for the end messages
+      setTimeout(function () {
+        // get scores or set up an array if none exist
+        let highScores = JSON.parse(window.localStorage.getItem("highScores")) || [];
+        console.log(game.score);
+        var newScore = {
+          score: game.score,
+        }
+        // Save score to local storage
+        highScores.push(newScore);
+        window.localStorage.setItem("highScores", JSON.stringify(highScores));
+      }, 9000);
     }
   }
   animate(0);
 })
-// console.log(document.getElementById('playerScore'));
-// console.log(playerScores);
-// console.log(document.getElementById('playserScore').value)
-let playerScore = document.querySelector('#playerScore')  
-const {Highscore} = require('../../models')
-
-setTimeout( async function(req,res,next){ 
-
-    console.log('ThisWorks')
-
- await Highscore.create({
-    score: playerScore.textContent,
-    user_id: req.session.user_id,
-})
-
-console.log('ThisWorks3333')
-
-next();
-  
-},10000);
