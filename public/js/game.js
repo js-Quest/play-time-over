@@ -127,7 +127,7 @@ window.addEventListener('load', function(){
       this.image = document.getElementById('player');
       this.powerUp = false;
       this.powerUpTimer = 0;
-      this.powerUpLimit = 10000;
+      this.powerUpLimit = 30000;
     }
     update(frameTime){
       if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
