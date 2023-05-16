@@ -4,6 +4,8 @@ window.addEventListener('click', function(){
   themeMusic.pause()  //pause theme music by clicking on the window
 })
 
+const playerScores = [];
+
 window.addEventListener('load', function(){
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
@@ -26,14 +28,12 @@ window.addEventListener('load', function(){
         } else if (event.key === 'd'){ //toggle git boxes on and off
           this.game.bug = !this.game.bug;
         }
-        // console.log(this.game.keys)
       });
       // one key in array at a time
       window.addEventListener('keyup', event => {
         if (this.game.keys.indexOf(event.key) > -1){
           this.game.keys.splice(this.game.keys.indexOf(event.key), 1)
         }
-        // console.log(this.game.keys)
       })
     }
 
@@ -503,21 +503,42 @@ window.addEventListener('load', function(){
 
       // game over
       if (this.game.gameOver){
+        // console.log(this.game.score)
+        let h1Score = document.getElementById('playerScore');
+        let finalScore = this.game.score;
+        playerScores.length = 1;
+        playerScores.push(finalScore);
+          const result = playerScores.slice(-1);
+          // console.log(result);
+        h1Score.innerHTML = `${finalScore}`;
         context.textAlign='center';
         let messageTop;
         let messageBottom;
         if(this.game.score > this.game.winningScore){
           messageTop = 'You did it.'
           messageBottom = 'You beat an easy game.'
+          // playerScores.push(finalScore);
+          // console.log(playerScores);
         }else{
           messageTop = 'Ya blew it!';
           messageBottom = 'Try again, looooserrrrr!';
+          // playerScores.push(finalScore);
+          // console.log(playerScores);
         }
         context.font = `100px ${this.fontFamily}`
         // the message, x and y destination coordinates.  *0.5 centers it.
         context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
         context.font = `50px ${this.fontFamily}`
-        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50) 
+        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50)
+        // playerScores.push(finalScore);
+        // console.log(playerScores); 
+        // return playerScores;
+        // function getValue() {
+        //   var h1 = document.getElementById('playerScore');
+        //   var h1content = h1.textContent;
+        //   console.log(h1content);
+        // }
+        // getValue();
       }
       // ammo bar
       if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
@@ -555,7 +576,7 @@ window.addEventListener('load', function(){
       this.score = 0;
       this.winningScore = 75;
       this.gameTime = 0;
-      this.timeLimit = 30000;
+      this.timeLimit = 10000;
       // backgroundLayer scroll speed
       this.speed = 1;
       this.bug = false;
@@ -693,6 +714,13 @@ window.addEventListener('load', function(){
     // update animation before next refresh, loop.
     game.update(frameTime);
     requestAnimationFrame(animate);
+    if(game.gameOver === true){
+      console.log(playerScores);
+      return playerScores;
+    }
   }
   animate(0);
 })
+// console.log(document.getElementById('playerScore'));
+// console.log(playerScores);
+// console.log(document.getElementById('playserScore').value)
