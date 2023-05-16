@@ -4,17 +4,15 @@
 
 let playerScore = document.querySelector('#playerScore')  
 
-setTimeout( async function(req,res,next){ 
-    await sequelize.sync({ force: false });
+setTimeout( async function(req,res,next){   
 
-    console.log('ThisWorks')
+    savedScore = JSON.parse(localStorage.getItem("highscores")) || [];
 
  await Highscore.create({
-    score: playerScore.textContent,
+    score: playerScore.savedScore[-1],
     user_id: req.session.user_id,
 })
-
-console.log('ThisWorks3333')
+ 
 
 next();
   
