@@ -1,26 +1,33 @@
 
 
  
-<h1>This is login page </h1>
+{{!-- <h1>This is login page </h1> --}}
 
+  <div class="flex-row">
+    <div class="col-md-6">
+      <h2 class="text-center signup" id="login">Login</h2>
 
-  <div class="col-md-6">
-    <h2>Login</h2>
-
-    <form class="form login-form">
-      <div class="form-group">
-        <label for="email-login">email:</label>
-        <input class="form-input" type="text" id="email-login" />
+      <form class="form login-form">
+        <div class="form-group p-5 pad-left">
+          <label for="email-login"></label>
+          <input class="form-input" type="text" id="email-login" placeholder="Example@email.com"/>
+        </div>
+        <div class="form-group p-5 pad-left">
+          <label for="password-login"></label>
+          <input class="form-input" type="password" id="password-login" placeholder="Password"/>
+        </div>
+        <div class="form-group">
+          <button class="pad-left pad-right btn btn-primary center-horizontal" type="submit">login</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6 flex-column">
+      <p id="gary-text1">"Should have done this sooner."</p>
+      <p id="gary-text2">- Gary the Seahorse </p>
+      <div class="flex-row justify-center border-gary">
+      <img id="gary" src="/assets/images/gary.png" alt="seahorse">
       </div>
-      <div class="form-group">
-        <label for="password-login">password:</label>
-        <input class="form-input" type="password" id="password-login" />
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary" type="submit">login</button>
-      </div>
-    </form>
+    </div>
   </div>
-
 
    <script src="/js/login.js"></script>
