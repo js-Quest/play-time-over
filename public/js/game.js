@@ -1,5 +1,6 @@
 
 const themeMusic = document.getElementById("level1");
+themeMusic.volume = 0.5;
 window.addEventListener('click', function(){
   themeMusic.pause()  //pause theme music by clicking on the window
 })
