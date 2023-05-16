@@ -10,6 +10,14 @@ const logout = async () => {
       alert(response.statusText);
     }
   };
+
+  const playAgain = () => {
+
+    document.location.replace('/');
+
+  }
+
   
   document.querySelector('#logout').addEventListener('click', logout);
+  document.querySelector('#playAgain').addEventListener('click', playAgain);
   

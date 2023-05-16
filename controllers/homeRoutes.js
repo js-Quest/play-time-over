@@ -1,10 +1,28 @@
 const router = require("express").Router(); 
 const withAuth = require('../utils/auth');
+const { Highscore, User } = require('../models');
 
 router.get("/", async (req, res) => {
     try { 
       if(req.session.logged_in){
-        res.render("games",{  
+
+        const highscoreData = await Highscore.findAll({
+          include: [
+            {
+              model: User,
+              attributes: ["name"],
+            },
+          ],
+        });
+ 
+        const highscores = highscoreData.map((highscore) =>
+        highscore.get({ plain: true })
+        );  
+
+        highscores.sort((a,b) => b.score - a.score)  
+
+        res.render("games",{   
+          highscores,
           loggedUser: req.session.name,
           logged_in: req.session.logged_in 
 
@@ -43,7 +61,23 @@ router.get("/", async (req, res) => {
 
   router.get("/games", withAuth, async (req, res) => {
     try { 
+      const highscoreData = await Highscore.findAll({
+        include: [
+          {
+            model: User,
+            attributes: ["name"],
+          },
+        ],
+      });
+
+      const highscores = highscoreData.map((highscore) =>
+      highscore.get({ plain: true })
+      ); 
+    
+      highscores.sort((a,b) => b.score - a.score)  
+
         res.render("games", {  
+          highscores,
           loggedUser: req.session.name,
           logged_in: req.session.logged_in 
         }); 
