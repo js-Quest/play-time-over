@@ -1,19 +1,49 @@
 const router = require("express").Router(); 
+const withAuth = require('../utils/auth');
 
 router.get("/", async (req, res) => {
     try { 
+      if(req.session.logged_in){
+        res.render("games",{  
+          loggedUser: req.session.name,
+          logged_in: req.session.logged_in 
+
+        }); 
+
+      } else {
         res.render("homepage",{  
           loggedUser: req.session.name,
           logged_in: req.session.logged_in 
         }); 
+      }
+
     } catch (err) {
       res.status(500).json(err);
     }
   });
 
-  router.get("/homepage", async (req, res) => {
+  // router.get("/homepage", async (req, res) => {
+  //   try { 
+
+  //     if(req.session.logged_in){
+  //       res.render("/games",{  
+  //         loggedUser: req.session.name,
+  //         logged_in: req.session.logged_in 
+  //       }); 
+
+  //     }
+  //       res.render("homepage", {  
+  //         loggedUser: req.session.name,
+  //         logged_in: req.session.logged_in 
+  //       }); 
+  //   } catch (err) {
+  //     res.status(500).json(err);
+  //   }
+  // });
+
+  router.get("/games", withAuth, async (req, res) => {
     try { 
-        res.render("homepage", {  
+        res.render("games", {  
           loggedUser: req.session.name,
           logged_in: req.session.logged_in 
         }); 
