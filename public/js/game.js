@@ -420,7 +420,7 @@ window.addEventListener('load', function(){
       this.powerDownSound = document.getElementById('powerdown');
       this.hitSound = document.getElementById('hit');
       this.explosionSound = document.getElementById('explosion');
-      this.shieldSound = document.getElementById('shield-sound');
+      this.shieldSound = document.getElementById('shieldSound');
       this.shotSound = document.getElementById('shot');
     }
     powerUp(){
