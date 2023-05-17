@@ -1,34 +1,48 @@
-
-// const { Highscore } = require("../../models");
-// const router = require('express').Router();
-
-setTimeout(async function () {
-  let savedScore = await JSON.parse(localStorage.getItem("highScores")) || [];
-
-  const temp = savedScore[savedScore.length - 1]; 
-
-  const response = await fetch('/api/highscore', {
-    method: "POST",
-    body: JSON.stringify(temp),
-    headers: { "Content-Type": "application/json" },
-  });
-  
-  let newResponse = await response.json()
-  console.log(newResponse)
-
-  console.log(newResponse.score)
-  console.log(temp.score)
  
 
+setTimeout( async function () { 
+
+  let savedScore = await JSON.parse(localStorage.getItem("highScores")) || []; 
+  const temp = await savedScore[savedScore.length - 1]; 
+
+
+  ////////////////// get route to grab any existing highscore, or UNDEFINED
+    const response = await fetch('/api/highscore', {
+        method: "GET", 
+        headers: { "Content-Type": "application/json" },
+      });
 
 
 
-  if (response.ok) { 
-    // document.location.replace('/games');
-  } else {
-    alert(response.statusText);
-  }
+    let existingScore = await response.json()  
+
+
+    if (!existingScore.score){
+      ///run a POST route IF no existing HIGHSCORE for the user
+      console.log('Run my hisghscore POST route')
+      const newResponse = await fetch('/api/highscore', {
+      method: "POST",
+      body: JSON.stringify(temp),
+      headers: { "Content-Type": "application/json" },
+      });
+
+    } else if (existingScore.score<temp.score){
+      console.log('Run my highscore PUT route')
+
+    const response = await fetch('/api/highscore', {
+    method: "PUT",
+    body: JSON.stringify(temp),
+    headers: { "Content-Type": "application/json" },
+    });
+
+    } else {
+      //if the newScore is WORSE than or equal to Existing Score, nothing happens
+      console.log("they are equal/or the temp score is worse than existing") 
+
+    }
+
+    console.log(existingScore.score)
+    console.log(temp.score)  
   
-}, 1000); 
-
-// module.exports = router;
+}, 10000); 
+ 
