@@ -1,4 +1,5 @@
 
+
 const themeMusic = document.getElementById("level1");
 themeMusic.volume = 0.3;
 let isPlaying = false;
@@ -17,6 +18,7 @@ const playerScores = [];
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
+
 canvas.width = 800;
 canvas.height = 500;
 window.addEventListener('load', function(){
