@@ -1,3 +1,9 @@
+::placeholder{
+  color: rgb(41, 22, 16);
+  opacity: 1;
+  font-weight: 500;
+}
+
 body {
   background-image: url(../assets/images/2205_w015_n001_829b_p15_829.jpg);
   background-size: cover;
@@ -216,4 +222,9 @@ h1 a {
 .pad-top-bottom {
   padding-top: 5%;
   padding-bottom: 5%;
+}
+
+.pad-bottom {
+  padding-bottom: 5%;
+  border-radius: 15px;
 }
