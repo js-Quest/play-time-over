@@ -1,21 +1,33 @@
-const { Highscore } = require('../../models');
-// const { User } = require('../../models');
+// const { Highscore } = require("../../models");
 // const router = require('express').Router();
 
-let playerScore = document.querySelector('#playerScore')  
+setTimeout(async function () {
+  let savedScore = await JSON.parse(localStorage.getItem("highScores")) || [];
 
-setTimeout( async function(req,res,next){   
+  const temp = savedScore[savedScore.length - 1]; 
 
-    savedScore = JSON.parse(localStorage.getItem("highscores")) || [];
+  const response = await fetch('/api/highscore', {
+    method: "POST",
+    body: JSON.stringify(temp),
+    headers: { "Content-Type": "application/json" },
+  });
+  
+  let newResponse = await response.json()
+  console.log(newResponse)
 
- await Highscore.create({
-    score: playerScore.savedScore[-1],
-    user_id: req.session.user_id,
-})
+  console.log(newResponse.score)
+  console.log(temp.score)
  
 
-next();
+
+
+
+  if (response.ok) { 
+    // document.location.replace('/games');
+  } else {
+    alert(response.statusText);
+  }
   
-},10000);
+}, 1000); 
 
 // module.exports = router;

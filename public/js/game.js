@@ -1,4 +1,5 @@
 
+
 const themeMusic = document.getElementById("level1");
 themeMusic.volume = 0.5;
 window.addEventListener('click', function(){
@@ -9,6 +10,7 @@ const playerScores = [];
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
+
 canvas.width = 800;
 canvas.height = 500;
 window.addEventListener('load', function(){
@@ -26,7 +28,7 @@ window.addEventListener('load', function(){
           this.game.keys.push(event.key);
         } else if (event.key === ' ') {
           this.game.player.upperShot();
-        } else if (event.key === 'd'){ //toggle git boxes on and off
+        } else if (event.key === 'd'){ //toggle hit boxes on and off
           this.game.bug = !this.game.bug;
         }
       });
@@ -723,7 +725,9 @@ window.addEventListener('load', function(){
         // Save score to local storage
         highScores.push(newScore);
         window.localStorage.setItem("highScores", JSON.stringify(highScores));
+  
       }, 9000);
+
 
 
 
