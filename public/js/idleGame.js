@@ -1,5 +1,5 @@
 const themeMusic = document.getElementById("home-score");
-themeMusic.volume = 0.5;
+themeMusic.volume = .8;
 let isPlaying = false;
 
 window.addEventListener('click', function () { //toggle music on and off by clicking
