@@ -1,3 +1,16 @@
+const themeMusic = document.getElementById("home-score");
+themeMusic.volume = .8;
+let isPlaying = false;
+
+window.addEventListener('click', function () { //toggle music on and off by clicking
+  if (isPlaying === false) {  // Use === instead of =
+    isPlaying = true;
+    themeMusic.play();
+  } else {
+    isPlaying = false;
+    themeMusic.pause();
+  }
+});
 
 
 const canvas = document.getElementById('game-canvas');
