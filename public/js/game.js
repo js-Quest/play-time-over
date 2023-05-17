@@ -522,7 +522,7 @@ window.addEventListener('load', function(){
     }
     update(frameTime){
       if (!this.gameOver){this.gameTime += frameTime;}
-      if (this.gameTime > this.timeLimit){this.gameOver = true;}
+      if (this.gameTime > this.timeLimit){this.gameOver = true};
       this.background.update();
       this.background.layer4.update(); //update layer4 after player renders so player doesn't overlap
       this.player.update(frameTime);
@@ -648,22 +648,19 @@ window.addEventListener('load', function(){
     // update animation before next refresh, loop.
     game.update(frameTime);
     requestAnimationFrame(animate);
-    if(game.gameOver === true){
-      // timeout function to let game play long enough for end messages to appear
-      setTimeout(function () {
-        let highScores = JSON.parse(window.localStorage.getItem("highScores")) || [];
-        // console.log(game.score);
-        var newScore = {
-          score: game.score,
-        }
-        // Save score to local storage
-        highScores.push(newScore);
-        window.localStorage.setItem("highScores", JSON.stringify(highScores));
-  
-      }, 9000); 
-    }
   }
   animate(0);
+  // get score outside of animation loop so local storage doesn't get overran with a million scores
+  // you get the one score.
+  setTimeout(function () {
+    let highScores = JSON.parse(window.localStorage.getItem("highScores")) || [];
+    var newScore = {
+      score: game.score,
+    }
+    // Saves score to local storage
+    highScores.push(newScore);
+    window.localStorage.setItem("highScores", JSON.stringify(highScores));
+  }, 9050);
 })
 
 
