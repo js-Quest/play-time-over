@@ -21,7 +21,13 @@ const logout = async () => {
     document.location.replace('/games');
 
   }
+  const secretLevel = () => {
+
+    document.location.replace('/level2');
+
+  }
   
   document.querySelector('#logout').addEventListener('click', logout);
   document.querySelector('#playAgain').addEventListener('click', playAgain);
+  document.querySelector('#level2').addEventListener('click', secretLevel);
   

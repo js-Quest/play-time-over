@@ -1,4 +1,4 @@
-::placeholder{
+::placeholder {
   color: rgb(41, 22, 16);
   opacity: 1;
   font-weight: 500;
@@ -14,6 +14,8 @@ h1 a {
   animation: shadows 1.5s infinite;
   transition: all .6s ease;
 }
+
+
 
 @keyframes shadows {
   0% {
@@ -42,6 +44,19 @@ h1 a {
   background: rgb(242, 142, 10);
   max-width: 100%;
   max-height: 100%;
+  flex-basis: 100%;
+  margin-top: 1.5%;
+  font-family: "Bangers", cursive;
+  border-radius: 10px;
+}
+
+#game-canvas2 {
+  border: 5px solid black;
+  background: rgb(242, 142, 10);
+  max-width: 100%;
+  max-height: 100%;
+  flex-basis: 100%;
+  margin-top: 1.5%;
   /* center transition element in center of page */
   position: absolute;
   top: 50%;
@@ -49,6 +64,7 @@ h1 a {
   transform: translate(-50%, -50%);
   font-family: "Bangers", cursive;
   border-radius: 10px;
+  margin-top: 12%;
 }
 
 #layer1,
@@ -83,7 +99,7 @@ h1 a {
   width: 110px;
   margin-top: 45px;
   border-radius: 10px;
-  padding-bottom: 4%;
+  padding-bottom: 3rem;
 }
 
 #logout {
@@ -92,7 +108,7 @@ h1 a {
   margin-top: 45px;
   border-radius: 10px;
   text-align: center;
-  padding-bottom: 4%;
+  padding-bottom: 3rem;
 }
 
 #playAgain {
@@ -100,8 +116,9 @@ h1 a {
   color: white;
   margin-top: 45px;
   border-radius: 10px;
-  padding-bottom: 4%;
+  padding-bottom: 3rem;
 }
+
 #marg-top {
   margin-top: 5%;
 }
@@ -144,6 +161,12 @@ h1 a {
   font-size: 1.5rem;
 }
 
+.gameScreen {
+  display: flex;
+  padding: 20px;
+  justify-content: space-evenly;
+}
+
 .welcome {
   margin-right: 325px;
   margin-top: 5%;
@@ -159,24 +182,18 @@ h1 a {
 }
 
 .scoresContainer {
-
   width: 25%;
-  height: 600px;
+  height: 565px;
   background-color: black;
   border: 5px solid;
   border-color: purple;
-  margin: 20px auto;
-  float: left;
-  position: absolute;
-  top: 190px;
-  left: 20px;
+  margin: 10px;
   opacity: 0.90;
   z-index: -1;
   border-radius: 10px;
   animation: shadows 1.5s infinite;
   transition: all .6s ease;
   color: white;
-
 }
 
 .signup {
@@ -227,4 +244,33 @@ h1 a {
 .pad-bottom {
   padding-bottom: 5%;
   border-radius: 15px;
+}
+
+@media screen and (max-width: 850px) {
+  h1 a {
+    font-size: 60px;
+  }
+
+  .gameScreen {
+    flex-direction: column-reverse;
+  }
+
+  .scoresContainer {
+    max-height: 200px;
+    width: 100%;
+    flex-basis: auto;
+    margin: 2% auto;
+  }
+}
+
+@media screen and (max-width: 523px) {
+  h1 a {
+    font-size: 50px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  h1 a {
+    font-size: 40px;
+  }
 }
