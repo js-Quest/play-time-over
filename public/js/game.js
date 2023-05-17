@@ -650,7 +650,7 @@ window.addEventListener('load', function(){
       // timeout function to let game play long enough for end messages to appear
       setTimeout(function () {
         let highScores = JSON.parse(window.localStorage.getItem("highScores")) || [];
-        console.log(game.score);
+        // console.log(game.score);
         var newScore = {
           score: game.score,
         }
