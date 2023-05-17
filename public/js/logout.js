@@ -1,3 +1,6 @@
+
+
+///upon logout, fetch request to DESTROY the req.session, then render the homepage 
 const logout = async () => {
     const response = await fetch('/api/logout', {
       method: 'POST',
@@ -11,12 +14,13 @@ const logout = async () => {
     }
   };
 
+
+  ///a simple function button to re-render the games.handlebars 
   const playAgain = () => {
 
-    document.location.replace('/');
+    document.location.replace('/games');
 
   }
-
   
   document.querySelector('#logout').addEventListener('click', logout);
   document.querySelector('#playAgain').addEventListener('click', playAgain);

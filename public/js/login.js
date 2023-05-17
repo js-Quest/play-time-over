@@ -1,3 +1,6 @@
+
+///captures html elements, then passes them to check if user exists, and if exsits and password is correct, then make a req.sessions and reload the page to the games.handlebars
+
 const loginFormHandler = async (event) => {
     event.preventDefault();
    

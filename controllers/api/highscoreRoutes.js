@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { Highscore, User } = require("../../models");
 
 
+///this ROUTE GRABS any exisiting HIGHSCORE for the currently signed in user, to be used in a conditional statement
 router.get("/", async (req, res) => {
   try { 
 
@@ -21,19 +22,12 @@ router.get("/", async (req, res) => {
 });
 
 
-
+///this route will POST to the HIGHSCORE database if the user DOES NOT have an existing score
 router.post("/", async (req, res) => {
-  try {
-
-    console.log("aalsdfjl;asdkjlasdj INSIDE THE FUNCTION")
-
-    console.log(req.body)
-
-
+  try { 
     const userData = await User.findOne({ where: { id: req.session.user_id} }); 
 
     const user = userData.get({plain:true}); 
-
 
     var temp = {
         score: req.body.score,
@@ -49,7 +43,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-
+///this ROUTE will UPDATE an EXISTING Highscore for the user IF the existing HIGHSCORE is less than the new score
 router.put("/", async (req, res) => {
   
   try {
