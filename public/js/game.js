@@ -1,9 +1,17 @@
 
 const themeMusic = document.getElementById("level1");
-themeMusic.volume = 0.5;
-window.addEventListener('click', function(){
-  themeMusic.pause()  //pause theme music by clicking on the window
-})
+themeMusic.volume = 0.4;
+let isPlaying = false;
+
+window.addEventListener('click', function () { //toggle music on and off by clicking
+  if (isPlaying === false) {  // Use === instead of =
+    isPlaying = true;
+    themeMusic.play();
+  } else {
+    isPlaying = false;
+    themeMusic.pause();
+  }
+});
 
 const playerScores = [];
 
@@ -18,7 +26,7 @@ window.addEventListener('load', function(){
       this.game = game;
       // movement up and down of player on key events
       window.addEventListener('keydown', event => {
-        themeMusic.play(); //theme music plays on any keydown event
+        
         if (( (event.key === 'ArrowUp')  ||
               (event.key === 'ArrowDown') )
         && this.game.keys.indexOf(event.key) === -1){
@@ -360,13 +368,13 @@ window.addEventListener('load', function(){
       this.layer3 = new BackgroundLayer(this.game, this.image3, 1);
       this.layer4 = new BackgroundLayer(this.game, this.image4, 1.5);
       this.layers = [this.layer1, this.layer2, this.layer3]
-    }
+    } 
     update(){
       this.layers.forEach(layer => layer.update());
     }
     draw(context){
       this.layers.forEach(layer => layer.draw(context));
-    }
+    } //layer 4 added later in the game class draw method so it appears in front
   }
   class Explosion {
     constructor(game, x, y) {
@@ -477,7 +485,6 @@ window.addEventListener('load', function(){
       this.frameX = 0;
       this.game.sound.shield();
     }
-
   }
   class UI{
     constructor(game) {
@@ -529,13 +536,7 @@ window.addEventListener('load', function(){
         // the message, x and y destination coordinates.  *0.5 centers it.
         context.fillText(messageTop, this.game.width*0.5, this.game.height*0.5 - 30)
         context.font = `50px ${this.fontFamily}`
-        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50)
-
-       
-       
-
-        
-        
+        context.fillText(messageBottom, this.game.width*0.5, this.game.height*0.5 + 50)       
       }
       // ammo bar
       if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
@@ -680,10 +681,8 @@ window.addEventListener('load', function(){
         this.explosions.push(new SmokeExplosion(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
       }else{
         this.explosions.push(new FireExplosion(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
-      }
-      
+      }  
     }
-
   // check collision of rectangles(sprite animation hit boxes)
     checkCollision(rect1,rect2){
       // is rect1Xposition less than rect2X plus its width
@@ -693,8 +692,6 @@ window.addEventListener('load', function(){
         rect1.height + rect1.y > rect2.y
       )
     }
-
-
   }
   // make the game and animate it on a continuous loop 
   const game = new Game(canvas.width, canvas.height);
@@ -723,64 +720,12 @@ window.addEventListener('load', function(){
         highScores.push(newScore);
         window.localStorage.setItem("highScores", JSON.stringify(highScores));
       }, 9000);
-
-
-
-      // console.log(playerScores);  
-       // playerScores.length = 1;
-        // playerScores.push(finalScore);
-        //   const result = playerScores.slice(-1);
-          // console.log(result);
-      
-      // or local storage, then directly navigate to other page.  Then make the fetch call from backend to the local storage
-      
-      //run a fetch post route to the back end (same as form submitting in activities) move to new page, then fetch most recent score on new page, use session info to create that table
-      // return playerScores;
     }
   }
   animate(0);
 })
-// console.log(document.getElementById('playerScore'));
-// console.log(playerScores);
-
-let timerInterval = setInterval(function () {
-  let secondsLeft = 10;
-  secondsLeft--;
-
-  if (secondsLeft === 0) {
-    console.log(document.getElementById('playerScore'))
-  }
-}, 1000);
 
 
-// Function to be executed at each interval
-// function timerFunction() {
-//   console.log("$$$$$$$$$$");
-  // Add your code here for the actions you want to perform at each interval
-// }
-
-// Set the interval to execute the timerFunction every 1 second (1000 milliseconds)
-// const interval = setInterval(timerFunction, 1000);
-
-// To stop the interval after a certain period of time (e.g., 5 seconds)
-// setTimeout(function () {
-//   clearInterval(interval); // Stop the interval
-//   const imageDataURL = canvas.toDataURL(); // Get the canvas content as a data URL
-//   const extractedText = extractTextFromDataURL(imageDataURL); // Extract the text from the data URL
-  
-//   function extractTextFromDataURL(dataURL) {
-//     const matches = dataURL.match(/,(.*)$/); // Extract the base64-encoded part of the data URL
-//     if (matches) {
-//       const base64Data = matches[1];
-//       const decodedData = atob(base64Data); // Decode the base64 data
-//       console.log(decodedData)
-//       return decodedData;
-//     }
-//     return null;
-//   }
-//   console.log(extractedText); 
-//   console.log("Did i get data");
-// }, 5000);
 
 
 
