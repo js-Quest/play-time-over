@@ -4,6 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/jass.css" />
     <link rel="stylesheet" href="/css/style.css" />
     <title>PLAY-TIME-OVER</title>
@@ -18,10 +19,12 @@
     </header>
     <div class="text-center p-1">
       {{#if logged_in}}
-        <button class="no-button" id="logout">LOGOUT</button>
+        <a class="waves-effect waves-light btn " id="logout">LOGOUT</a>
         {{! button handler in js/logout.js }}
-        <button class="no-button" id="playAgain">PLAY AGAIN</button>
-        <div class="text-dark text-right welcome">
+        <a class="waves-effect waves-light btn" id="playAgain">PLAY AGAIN</a>
+        <a class="waves-effect waves-light btn" id="level2">SECRET</a>
+        {{!-- <button class="no-button" id="level1">LEVEL 1</button>
+        <button class="no-button" id="level2">LEVEL 2</button> --}}
           <h2>Welcome, {{loggedUser}}!</h2>
         </div>
       {{/if}}
