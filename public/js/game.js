@@ -1,6 +1,6 @@
 
 const themeMusic = document.getElementById("level1");
-themeMusic.volume = 0.4;
+themeMusic.volume = 0.3;
 let isPlaying = false;
 
 window.addEventListener('click', function () { //toggle music on and off by clicking
