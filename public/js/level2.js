@@ -1,6 +1,6 @@
 
 
-const themeMusic = document.getElementById("level2");
+const themeMusic = document.getElementById("bonus");
 themeMusic.volume = 0.3;
 let isPlaying = false;
 
@@ -16,7 +16,7 @@ window.addEventListener('click', function () { //toggle music on and off by clic
 
 const playerScores = [];
 
-const canvas = document.getElementById('game-canvas');
+const canvas = document.getElementById('game-canvas2');
 const ctx = canvas.getContext('2d');
 
 canvas.width = 800;
@@ -372,17 +372,17 @@ window.addEventListener('load', function () {
     }
     powerUp() {
       this.powerUpSound.currentTime = 0; //play same file again if method is called, using the built in currentTime media property
-      this.powerUpSound.volume = 0.6
+      this.powerUpSound.volume = 0.3
       this.powerUpSound.play();
     }
     powerDown() {
       this.powerDownSound.currentTime = 0;
-      this.powerDownSound.volume = 0.6
+      this.powerDownSound.volume = 0.3
       this.powerDownSound.play();
     }
     hit() {
       this.hitSound.currentTime = 0;
-      this.hitSound.volume = 0.8
+      this.hitSound.volume = 0.5
       this.hitSound.play();
     }
     explosion() {
@@ -391,12 +391,12 @@ window.addEventListener('load', function () {
     }
     shield() {
       this.shieldSound.currentTime = 0;
-      this.shieldSound.volume = 0.4
+      this.shieldSound.volume = 0.05
       this.shieldSound.play();
     }
     shot() {
       this.shotSound.currentTime = 0;
-      this.shotSound.volume = 0.8
+      this.shotSound.volume = 0.7
       this.shotSound.play();
     }
   }
