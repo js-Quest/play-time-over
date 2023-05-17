@@ -137,4 +137,41 @@ router.get("/game", (req, res) => {
   res.render("games");
 });
 
+router.get("/level2", withAuth, async (req, res) => {
+  try {
+    const highscoreData = await Highscore.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    const highscores = highscoreData.map((highscore) =>
+      highscore.get({ plain: true })
+    );
+
+    highscores.sort((a, b) => b.score - a.score);
+
+    res.render("level2", {
+      highscores,
+      loggedUser: req.session.name,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/level2", (req, res) => {
+  if (req.session.logged_in) {
+    res.redirect("/");
+    return;
+  }
+  res.render("level2");
+});
+
+
+
 module.exports = router;
