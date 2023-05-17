@@ -4,6 +4,9 @@ const { User, Highscore} = require('../models');
 const userData = require('./user-Data.json');
 const highscoreData = require('./highscoreData.json');
 
+
+///base seeds to test with 
+
 const seedDatabase = async () => {
   await sequelize.sync({ force: true });
 

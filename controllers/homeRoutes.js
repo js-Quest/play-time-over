@@ -2,43 +2,30 @@ const router = require("express").Router();
 const withAuth = require("../utils/auth");
 const { Highscore, User } = require("../models");
 
-router.get("/", async (req, res) => {
+
+////this route will  will render either games.handlebars or homepage.handlebars, depending on req.session.logged_in, but in either case, 
+///will pass an array of the highscores in reverse sorted order to be used and rendered to both pages
+router.get("/", async (req, res) => { 
+
   try {
+    const highscoreData = await Highscore.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["name"],
+        },
+      ],
+    });
+
+    const highscores = highscoreData.map((highscore) =>
+      highscore.get({ plain: true })
+    );
+
+    highscores.sort((a, b) => b.score - a.score); 
+
+
     if (req.session.logged_in) {
-      const highscoreData = await Highscore.findAll({
-        include: [
-          {
-            model: User,
-            attributes: ["name"],
-          },
-        ],
-      });
-
-      const highscores = highscoreData.map((highscore) =>
-        highscore.get({ plain: true })
-      );
-
-      highscores.sort((a, b) => b.score - a.score);
-
-
-      /*setTimeout(async function () { 
-        let savedScore = await JSON.parse(localStorage.getItem("highScores")) || [];
-        let lastScore = {
-          score: savedScore[savedScore.length-1],
-          user_id: req.session.user_id,
-        }
-        console.log(lastScore);
-      }, 10000); */
-
-        
-
-        /*await Highscore.create({
-          score: savedScore[-1],
-          user_id: req.session.user_id,
-        }); 
-        localStorage.clear()
-      }, 10000); */
-
+  
 
       res.render("games", {
         highscores,
@@ -50,34 +37,20 @@ router.get("/", async (req, res) => {
 
     } else {
       res.render("homepage", {
+        highscores,
         loggedUser: req.session.name,
         logged_in: req.session.logged_in,
       });
     }
+
+
   } catch (err) {
     res.status(500).json(err);
   }
-});
+}); 
 
-// router.get("/homepage", async (req, res) => {
-//   try {
 
-//     if(req.session.logged_in){
-//       res.render("/games",{
-//         loggedUser: req.session.name,
-//         logged_in: req.session.logged_in
-//       });
-
-//     }
-//       res.render("homepage", {
-//         loggedUser: req.session.name,
-//         logged_in: req.session.logged_in
-//       });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
+///when /games is called directly, withAuth will validate req.session, if bad, redirects to homepage. else, renders highscores to page
 router.get("/games", withAuth, async (req, res) => {
   try {
     const highscoreData = await Highscore.findAll({
@@ -105,6 +78,8 @@ router.get("/games", withAuth, async (req, res) => {
   }
 });
 
+
+///login route renders login page
 router.get("/login", (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
@@ -117,6 +92,7 @@ router.get("/login", (req, res) => {
   res.render("login");
 });
 
+///signup route renders signup page 
 router.get("/signup", (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
@@ -129,14 +105,7 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-router.get("/game", (req, res) => {
-  if (req.session.logged_in) {
-    res.redirect("/");
-    return;
-  }
-  res.render("games");
-});
-
+ 
 router.get("/level2", withAuth, async (req, res) => {
   try {
     const highscoreData = await Highscore.findAll({

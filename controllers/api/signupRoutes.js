@@ -2,6 +2,8 @@ const router = require('express').Router();
 const { User } = require('../../models');
 
 
+
+///this route creates the USER with the passed information, then creates a req.session
 router.post('/', async (req, res) => {
     try {
       const userData = await User.create(req.body);

@@ -1,3 +1,5 @@
+////an event handler to grab the values of the below HTML elements and use them to send a POST route to the backend for a new user creation
+////upon successful sign up, re-render the page into the games.handlebars
 
 const signupFormHandler = async (event) => {
     event.preventDefault();
