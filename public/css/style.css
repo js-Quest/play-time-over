@@ -147,7 +147,10 @@ h1 a {
   padding-bottom: 1.5rem;
   font-size: 3.2rem;
 }
-
+.centerBtn {
+  display: flex;
+  align-items: center;
+}
 #sign-in {
   font-size: 3rem;
   background-color: black;
