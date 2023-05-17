@@ -20,14 +20,25 @@ router.get("/", async (req, res) => {
 
       highscores.sort((a, b) => b.score - a.score);
 
-      setTimeout(async function () { 
-        let savedScore = await JSON.parse(window.localStorage.getItem("highScores")) || [];
-        await Highscore.create({
+
+      /*setTimeout(async function () { 
+        let savedScore = await JSON.parse(localStorage.getItem("highScores")) || [];
+        let lastScore = {
+          score: savedScore[savedScore.length-1],
+          user_id: req.session.user_id,
+        }
+        console.log(lastScore);
+      }, 10000); */
+
+        
+
+        /*await Highscore.create({
           score: savedScore[-1],
           user_id: req.session.user_id,
         }); 
         localStorage.clear()
-      }, 10000);
+      }, 10000); */
+
 
       res.render("games", {
         highscores,
