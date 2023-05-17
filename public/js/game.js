@@ -370,30 +370,35 @@ window.addEventListener('load', function(){
       this.shieldSound = document.getElementById('shieldSound');
       this.shotSound = document.getElementById('shot');
     }
-    powerUp(){
+    powerUp() {
       this.powerUpSound.currentTime = 0; //play same file again if method is called, using the built in currentTime media property
+      this.powerUpSound.volume = 0.6
       this.powerUpSound.play();
     }
-    powerDown(){
+    powerDown() {
       this.powerDownSound.currentTime = 0;
+      this.powerDownSound.volume = 0.6
       this.powerDownSound.play();
     }
-    hit(){
+    hit() {
       this.hitSound.currentTime = 0;
+      this.hitSound.volume = 0.8
       this.hitSound.play();
     }
-    explosion(){
+    explosion() {
       this.explosionSound.currentTime = 0;
       this.explosionSound.play();
     }
-    shield(){
+    shield() {
       this.shieldSound.currentTime = 0;
+      this.shieldSound.volume = 0.4
       this.shieldSound.play();
     }
-    shot(){
+    shot() {
       this.shotSound.currentTime = 0;
+      this.shotSound.volume = 0.8
       this.shotSound.play();
-    } 
+    }
   }
   class Shield {
     constructor(game) {
@@ -512,7 +517,7 @@ window.addEventListener('load', function(){
       this.ammoInterval = 400;
       this.gameOver = false;
       this.score = 0;
-      this.winningScore = 75;
+      this.winningScore = 80;
       this.gameTime = 0;
       this.timeLimit = 9000;
       // backgroundLayer scroll speed
