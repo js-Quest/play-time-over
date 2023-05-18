@@ -95,6 +95,14 @@ h1 a {
 #violetCave {
   display: none;
 }
+#soloAnime {
+  position: absolute;
+  top: 0%;
+  left: 72%;
+  transform: translate (-50%, -50%);
+  width: 100px;
+  height: 100px;
+}
 
 #level2 {
   background-color: rgb(232, 140, 79);
@@ -225,6 +233,11 @@ h1 a {
   padding: 20px;
   justify-content: space-evenly;
 }
+.gameScreen2 {
+  display: flex;
+  padding: 20px;
+  justify-content: space-evenly;
+}
 
 .welcome {
   margin-right: 325px;
@@ -345,6 +358,10 @@ h1 a {
     transition: all 0.5s ease;
   }
   .gameScreen {
+    flex-direction: column-reverse;
+    transition: all 0.5s ease;
+  }
+  .gameScreen2 {
     flex-direction: column;
     transition: all 0.5s ease;
   }
