@@ -1,51 +1,47 @@
 <div class="text-center">
 
-  <h1 class="pt-2" id="to-play"><a
-      href="/login"
-      id="sign-in"
-      class="border-rad"
-    > Sign in</a>
+  <h1 class="pt-2" id="to-play"><a href="/login" id="sign-in" class="border-rad"> Sign in</a>
     to Play!</h1>
 
   <p id="account">Dont have an account?
-    <a class="signup" href="/signup">Sign up!</a></p>
+    <a class="signup" href="/signup">Sign up!</a>
+  </p>
 
 </div>
 
-<link
-  href="https://fonts.googleapis.com/css2?family=Bangers&display=swap"
-  rel="stylesheet"
-/>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/css/style.css" />
 <!-- get rid of favicon error in console with the code below. -->
 <link rel="shortcut icon" href="#" />
 
 <div id="score-container">
   <h1 type="text" id="playerScore"></h1>
-</div> 
-
-<div class="scoresContainer">
-  <p class="text-center leaderboard">Leaderboards</p>
-  <ol>
-    {{#if highscores.length}}
-      {{#each highscores as |highscore|}}
-        <li>
-          <div class="row mb-2">
-            <div class="col-md-8">
-              <h4>{{highscore.user.name}}</h4>
-            </div>
-            <div class="col-md-4">
-              <h4>{{highscore.score}}</h4>
-            </div>
-          </div>
-        </li>
-      {{/each}}
-    {{/if}}
-  </ol>
 </div>
 
-<canvas role="presentation" id="game-canvas"></canvas> 
-
+<div class="gameScreen">
+  <div class="scoresContainer">
+    <p class="text-center leaderboard">Leaderboards</p>
+    <ol>
+      {{#if highscores.length}}
+      {{#each highscores as |highscore|}}
+      <li>
+        <div class="row mb-2">
+          <div class="col-md-8">
+            <h4>{{highscore.user.name}}</h4>
+          </div>
+          <div class="col-md-4">
+            <h4>{{highscore.score}}</h4>
+          </div>
+        </div>
+      </li>
+      {{/each}}
+      {{/if}}
+    </ol>
+  </div>
+  <div>
+    <canvas role="presentation" id="game-canvas"></canvas>
+  </div>
+</div>
 <!-- parallax scrolling environment -->
 <img id="layer1" src="/assets/images/layers/bubbles-layer.png" />
 <img id="layer2" src="/assets/images/layers/layer2.png" />
@@ -66,10 +62,7 @@
 
 <!-- effects -->
 <img id="gears" src="/assets/images/visual-effects/gears.png" />
-<img
-  id="smokeExplosion"
-  src="/assets/images/visual-effects/smokeExplosion.png"
-/>
+<img id="smokeExplosion" src="/assets/images/visual-effects/smokeExplosion.png" />
 <img id="fireExplosion" src="/assets/images/visual-effects/fireExplosion.png" />
 <img id="shield" src="/assets/images/visual-effects/shield.png" />
 <img id="fireball" src="/assets/images/sprites/fireball.png" />
