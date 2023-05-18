@@ -48,6 +48,8 @@ h1 a {
   margin-top: 1.5%;
   font-family: "Bangers", cursive;
   border-radius: 10px;
+  animation: shadows 1.5s infinite;
+  transition: all .6s ease;
 }
 
 #game-canvas2 {
@@ -64,7 +66,11 @@ h1 a {
   transform: translate(-50%, -50%);
   font-family: "Bangers", cursive;
   border-radius: 10px;
-  margin-top: 12%;
+  margin-top: 3%;
+  
+  animation: shadows 1.5s infinite;
+  transition: all .6s ease;
+  
 }
 
 #layer1,
@@ -117,6 +123,8 @@ h1 a {
   margin-top: 45px;
   border-radius: 10px;
   padding-bottom: 3rem;
+  margin-right: 15px;
+  margin-left: 15px;
 }
 
 #marg-top {
@@ -127,6 +135,7 @@ h1 a {
   max-width: 300px;
   max-height: 554px;
   border-radius: 15px;
+  opacity: .7;
 }
 
 #gary-text1 {
@@ -147,10 +156,20 @@ h1 a {
   padding-bottom: 1.5rem;
   font-size: 3.2rem;
 }
+
 .centerBtn {
   display: flex;
   align-items: center;
 }
+
+.btnStyle{
+    text-shadow: rgb(13, 46, 235) 0 0 10px;
+  animation: shadows 1.5s infinite;
+  transition: all .6s ease; 
+  color: black !important;
+  background-color: #48abe0 !important;
+}
+
 #sign-in {
   font-size: 3rem;
   background-color: black;
@@ -172,7 +191,7 @@ h1 a {
 
 .welcome {
   margin-right: 325px;
-  margin-top: 5%;
+  /* margin-top: 5%; */
   text-shadow: rgb(13, 46, 235) 0 0 10px;
   width: 100%;
 }
@@ -201,6 +220,22 @@ h1 a {
 
 .signup {
   font-size: 1.8rem;
+  color: black;
+}
+
+.neonText{
+  animation: flicker .8s infinite alternate;  
+
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+    rgb(13, 46, 235) 0 0 10px
+  }
+  20%, 24%, 55% {       
+    text-shadow: none;
+  }
 }
 
 .pad-left {
