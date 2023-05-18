@@ -1,7 +1,7 @@
 ::placeholder {
   color: rgb(41, 22, 16);
   opacity: 1;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 body {
@@ -14,8 +14,6 @@ h1 a {
   animation: shadows 1.5s infinite;
   transition: all .6s ease;
 }
-
-
 
 @keyframes shadows {
   0% {
@@ -97,6 +95,14 @@ h1 a {
 #violetCave {
   display: none;
 }
+#soloAnime {
+  position: absolute;
+  top: 0%;
+  left: 72%;
+  transform: translate (-50%, -50%);
+  width: 100px;
+  height: 100px;
+}
 
 #level2 {
   background-color: rgb(232, 140, 79);
@@ -114,6 +120,39 @@ h1 a {
   
 }
 
+.signupFont {
+  font-size: 1.5rem;
+}
+
+#instruct{
+  font-size: 3rem;
+  margin-top: 1rem;
+  opacity: 1;
+}
+
+#list-instruct {
+  margin-left: 20%;
+  font-size: 1.5rem;
+}
+
+#signup-container{
+  flex: 0 0 50%;
+}
+#instruct-container{
+  background-color: rgb(240, 145, 72);
+  flex: 0 0 50%;
+  border-radius: 15px;
+  margin-bottom: 6%;
+  opacity: .85;
+}
+
+#signupPage-container{
+  display: flex;
+}
+
+#instructions{
+  background-color: grey;
+}
 #logout {
   background-color: brown;
   color: white;
@@ -134,7 +173,7 @@ h1 a {
 }
 
 #marg-top {
-  margin-top: 5%;
+  margin-top: 20%;
 }
 
 #gary {
@@ -190,6 +229,11 @@ h1 a {
 }
 
 .gameScreen {
+  display: flex;
+  padding: 20px;
+  justify-content: space-evenly;
+}
+.gameScreen2 {
   display: flex;
   padding: 20px;
   justify-content: space-evenly;
@@ -293,10 +337,33 @@ h1 a {
 @media screen and (max-width: 850px) {
   h1 a {
     font-size: 60px;
+    transition: all 0.5s ease;
   }
 
+  ol {
+    margin-left: 10%;
+    transition: all 0.5s ease;
+  }
+  #marg-top{
+    margin-top: 3%;
+  }
+  #instruct-container{
+    margin-bottom: 0%;
+    flex: 0 0 0;
+    margin-top: 12%;
+    transition: all 0.5s ease;
+  }
+  #signupBtn {
+    margin-top: 2%;
+    transition: all 0.5s ease;
+  }
   .gameScreen {
     flex-direction: column-reverse;
+    transition: all 0.5s ease;
+  }
+  .gameScreen2 {
+    flex-direction: column;
+    transition: all 0.5s ease;
   }
 
   .scoresContainer {
@@ -304,12 +371,19 @@ h1 a {
     width: 100%;
     flex-basis: auto;
     margin: 2% auto;
+    transition: all 0.5s ease;
   }
 }
 
 @media screen and (max-width: 523px) {
   h1 a {
     font-size: 50px;
+  }
+  ol {
+    margin-left: 0%;
+  }
+  #instruct-container {
+    margin-top: 15%;
   }
 }
 

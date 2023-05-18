@@ -663,7 +663,7 @@ window.addEventListener('load', function () {
     // Saves score to local storage
     highScores.push(newScore);
     window.localStorage.setItem("highScores", JSON.stringify(highScores));
-  }, 9050);
+  }, 30000);
 })
 
 
