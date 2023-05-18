@@ -20,10 +20,10 @@ const logout = async () => {
 
     document.location.replace('/games');
 
-  }
+  }  
   const secretLevel = () => {
 
-    document.location.replace('/level2');
+    document.location.replace('/level2');  
 
   }
   
