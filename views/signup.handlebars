@@ -1,26 +1,45 @@
+<div class="gameScreen" id="singupPage-container">
 
-
-
-
-
-<h1 class="text-center pad-top-bottom neonText">Sign Up Below!</h1>
-
+  <div id="signup-container">
+    <h1 class="text-center pad-top-bottom neonText">Sign Up Below!</h1>
     <form class="form signup-form">
-      <div class="form-group pad-left2 pad-right2">
+      <div class="form-group pad-left2 pad-right2 ">
         <label for="name-signup"></label>
-        <input class="form-input neonText" type="text" id="name-signup" placeholder="Name"/>
+        <input class="form-input neonText" type="text" id="name-signup" placeholder="Name" />
       </div>
       <div class="form-group pad-left2 pad-right2">
-        <label for="email-signup" ></label>
+        <label for="email-signup"></label>
         <input class="form-input neonText" placeholder="Example@email.com" type="text" id="email-signup" />
       </div>
       <div class="form-group pad-left2 pad-right2">
-        <label for="password-signup" ></label>
+        <label for="password-signup"></label>
         <input class="form-input neonText" placeholder="Password" type="password" id="password-signup" />
       </div>
       <div class="form-group pad-left2 pad-right2" id="marg-top">
-        <button class="btn btn-primary center-horizontal centerBtn pad-left pad-right btnStyle" type="submit">signup</button>
+        <button class="btn btn-primary center-horizontal centerBtn pad-left pad-right btnStyle" id="signupBtn"
+          type="submit">signup</button>
       </div>
     </form>
-
-    <script src="/js/signup.js"></script>
+  </div>
+  <div id="instruct-container">
+    <h1 class="text-center pad-top-bottom neonText" id="instruct">Instructions</h1>
+    <div id="list-instruct">
+      <ol>
+        <span class="neonText">⬆️</span><span id=""> move up</span>
+      </ol>
+      <ol>
+        <span class="neonText">⬇️</span> move down
+      </ol>
+      <ol>
+        <b class="controls neonText">space_bar</b> : shoot fireballs
+      </ol>
+      <ol>
+        <b class="controls neonText">D</b> : show hit-boxes
+      </ol>
+      <ol>
+        <b class="controls neonText">'click'</b> : toggle music
+      </ol>
+    </div>
+  </div>
+</div>
+<script src="/js/signup.js"></script>
