@@ -17,7 +17,7 @@ const loginFormHandler = async (event) => {
       if (response.ok) { 
         document.location.replace('/games');
       } else {
-        alert(response.statusText);
+        alert('Not a valid email and/or password, sign up or try again!');
       }
     }
   };
