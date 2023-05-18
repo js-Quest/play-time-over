@@ -12,8 +12,8 @@
 <div id="score-container">
   <h1 type="text" id="playerScore"></h1>
 </div>
-
-<div class="scoresContainer">
+ 
+{{!-- <div class="scoresContainer">
   <p class="text-center leaderboard">Leaderboards</p>
   <ol>
     {{#if highscores.length}}
@@ -31,12 +31,12 @@
     {{/each}}
     {{/if}}
   </ol>
-</div>
+</div> --}}
 
 <div>
   <div>
 
-    <canvas role="presentation" id="game-canvas"></canvas>
+    <canvas role="presentation" id="game-canvas2"></canvas>
 
     <!-- parallax scrolling environment -->
     <img id="violetCave" src="/assets/images/layers/violetCave.png" />
@@ -64,7 +64,7 @@
     <img id="fireball" src="/assets/images/sprites/fireball.png">
 
     <!-- audio -->
-    <audio id="level2" src="/assets/audio/theme-songs/level2.mp3"></audio>
+    <audio id="bonus" src="/assets/audio/theme-songs/level2.mp3"></audio>
     <audio id="level4" src="/assets/audio/theme-songs/home-score.mp3"></audio>
     <audio id="powerup" src="/assets/audio/sound-effects/powerup.wav"></audio>
     <audio id="powerdown" src="/assets/audio/sound-effects/powerdown.wav"></audio>

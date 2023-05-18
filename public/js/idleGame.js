@@ -13,7 +13,7 @@ window.addEventListener('click', function () { //toggle music on and off by clic
 });
 
 
-const canvas = document.getElementById('game-canvas');
+const canvas = document.getElementById('game-canvas2');
 const ctx = canvas.getContext('2d');
 canvas.width = 600;
 canvas.height = 450;
