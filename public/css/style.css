@@ -228,6 +228,22 @@ h1 a {
   font-size: 1.5rem;
 }
 
+#github-div{
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  bottom: 2%;
+  right: 8;
+  width: 25%;
+  justify-content: space-evenly;
+}
+
+.github {
+  font-size: 2rem;
+  text-decoration: none;
+  color: black;
+}
+
 .gameScreen {
   display: flex;
   padding: 20px;
