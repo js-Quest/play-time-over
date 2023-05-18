@@ -11,18 +11,16 @@
   </head>
   
   <body>
-
     <header class="display-flex justify-center p-2 bg-dark">
       <h1>
         <a class="border-rad" href="/">PLAY-TIME-OVER</a>
       </h1>
     </header>
-    <div class="text-center p-1">
       {{#if logged_in}}
-        <a class="waves-effect waves-light btn " id="logout">LOGOUT</a>
-        {{! button handler in js/logout.js }}
-        <a class="waves-effect waves-light btn" id="playAgain">START OVER</a>
-        <a class="waves-effect waves-light btn" id="level2">SECRET</a>
+    <div class="text-center p-1">
+      <a class="waves-effect waves-light btn" id="level2">SECRET</a> 
+        <a class="waves-effect waves-light btn btnStyle" id="playAgain">START OVER</a> 
+      <a class="waves-effect waves-light btn " id="logout">LOGOUT</a> 
         </div>
       {{/if}}
     </div>
