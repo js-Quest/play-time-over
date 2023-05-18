@@ -16,8 +16,9 @@
   - [Questions](#questions)
 
   ## Installation
-  Navigate to the deployed link:   
-  You are also welcome to clone this repo and run it on a local server if you prefer (don't forget to make a .env file for the user database).
+  Navigate to the deployed link: [play-time-over](https://play-time-over.herokuapp.com/)   
+  
+  You are also welcome to clone this repo and run it on a local server if you prefer (don't forget to make an .env file with DB_USER = 'root' , DB_NAME = 'game_db' and DB_PASSWORD = 'yourpassword' ,  and to initialize the database in MySQL).
   
   ## Usage
   To have some fun!  Take a break and play a free game!  
