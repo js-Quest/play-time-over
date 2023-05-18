@@ -26,3 +26,4 @@ const signupFormHandler = async (event) => {
   document
   .querySelector('.signup-form')
   .addEventListener('submit', signupFormHandler);
+<script src="/js/soloAnime.js"></script>
