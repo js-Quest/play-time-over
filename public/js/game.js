@@ -517,7 +517,7 @@ window.addEventListener('load', function () {
       this.score = 0;
       this.winningScore = 100;
       this.gameTime = 0;
-      this.timeLimit = 9000;
+      this.timeLimit = 30000;
       // backgroundLayer scroll speed
       this.speed = 1;
       this.bug = false;

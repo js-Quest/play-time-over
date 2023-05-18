@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 }); 
-
+ 
 
 ///when /games is called directly, withAuth will validate req.session, if bad, redirects to homepage. else, renders highscores to page
 router.get("/games", withAuth, async (req, res) => {
@@ -83,7 +83,7 @@ router.get("/games", withAuth, async (req, res) => {
 router.get("/login", (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-    res.redirect("/homepage", {
+    res.redirect("/games", {
       loggedUser: req.session.name,
       logged_in: req.session.logged_in,
     });
@@ -96,7 +96,7 @@ router.get("/login", (req, res) => {
 router.get("/signup", (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-    res.redirect("/homepage", {
+    res.redirect("/games", {
       loggedUser: req.session.name,
       logged_in: req.session.logged_in,
     });
@@ -107,24 +107,9 @@ router.get("/signup", (req, res) => {
 
  
 router.get("/level2", withAuth, async (req, res) => {
-  try {
-    const highscoreData = await Highscore.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ["name"],
-        },
-      ],
-    });
+  try { 
 
-    const highscores = highscoreData.map((highscore) =>
-      highscore.get({ plain: true })
-    );
-
-    highscores.sort((a, b) => b.score - a.score);
-
-    res.render("level2", {
-      highscores,
+    res.render("level2", { 
       loggedUser: req.session.name,
       logged_in: req.session.logged_in,
     });
@@ -133,13 +118,13 @@ router.get("/level2", withAuth, async (req, res) => {
   }
 });
 
-router.get("/level2", (req, res) => {
-  if (req.session.logged_in) {
-    res.redirect("/");
-    return;
-  }
-  res.render("level2");
-});
+// router.get("/level2", (req, res) => {
+//   if (req.session.logged_in) {
+//     res.redirect("/");
+//     return;
+//   }
+//   res.render("level2");
+// });
 
 
 

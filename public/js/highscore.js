@@ -41,5 +41,5 @@ setTimeout( async function () {
     }
  
   
-}, 10000); 
+}, 30100); 
  
