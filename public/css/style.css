@@ -282,6 +282,7 @@ h1 a {
   animation: shadows 1.5s infinite;
   transition: all .6s ease;
   color: white;
+  overflow: auto;
 }
 
 .signup {
